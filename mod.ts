@@ -30,7 +30,7 @@ export async function mdrb(args: string[]) {
       if (fileIsMD || fileIsRemote) {
         if (fileIsRemote) {
           mdContent = await $.request(file).timeout(30_000).noThrow().text();
-          mdFileUrl = toFileURL("xmd-remote.md");
+          mdFileUrl = toFileURL("mdrb-remote.md");
         } else {
           invariant(await $.exists(file), `no file exists at ${file}`, ValidationError);
 
@@ -42,7 +42,7 @@ export async function mdrb(args: string[]) {
         invariant(!stdinIsTTY, ttyErrorMsg, ValidationError);
 
         mdContent = new TextDecoder().decode(await readAll(Deno.stdin));
-        mdFileUrl = toFileURL("xmd-stdin.md");
+        mdFileUrl = toFileURL("mdrb-stdin.md");
       }
 
       const noCodeMsg = fileIsMD || fileIsRemote ? `no code to run for ${file}` : "no code to run from stdin";
