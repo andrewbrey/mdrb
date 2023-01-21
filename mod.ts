@@ -149,7 +149,16 @@ export function toFileURL(path: string) {
   return $.path.toFileUrl(absolute).toString();
 }
 
-/** Extract valid code blocks from the specified markdown content */
+/**
+ * Extract valid code blocks from the specified markdown content
+ *
+ * NOTE: this function is adapted from a related feature in
+ * [c4spar/deno-dzx](https://github.com/c4spar/deno-dzx/blob/c70a9868fe51d39313e8e1bca0b01ef660cba2b6/src/cli/lib/markdown.ts)
+ * and note also that I, @andrewbrey, am the original author
+ * of the markdown execution code in `deno-dzx`. Thanks @c4spar
+ * for your excellent libraries and for keeping `deno-dzx`
+ * permissively licenced so I can re-use my code in my own project!
+ */
 export function mdCodeBlocks(mdContent: string, mdFileUrl: string) {
   const mdTokens = tokens(mdContent);
   const supportedLanguages = ["js", "javascript", "ts", "typescript"];
