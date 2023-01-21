@@ -1,7 +1,7 @@
 import { $, colors, Command, EnumType, readAll, tokens, ValidationError } from "./deps.ts";
 
 /** Current module version */
-export const version = "1.0.0";
+export const version = "1.0.1";
 
 /** Execute the specified markdown file */
 export async function mdrb(args: string[]) {
