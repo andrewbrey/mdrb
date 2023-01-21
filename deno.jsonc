@@ -1,0 +1,8 @@
+{
+  "fmt": { "options": { "lineWidth": 120 } },
+  "tasks": {
+    "test": "deno test --no-check",
+    "lint": "deno check --all mod.ts && deno lint",
+    "deps": "deno run --allow-read=. --allow-write=. --allow-net https://deno.land/x/udd/main.ts deps.ts deps.test.ts"
+  }
+}
