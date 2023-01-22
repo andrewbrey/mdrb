@@ -25,7 +25,7 @@ Deno.test("invariant returns if all ok", () => {
 });
 
 Deno.test("toFileURL works", () => {
-  const cwd = Deno.cwd();
+  const cwd = Deno.cwd().replaceAll($.path.SEP, $.path.posix.sep);
 
   assertEquals(toFileURL("/a/b/c"), "file:///a/b/c");
   assertEquals(toFileURL("./d/e/f"), `file://${$.path.join(cwd)}/d/e/f`);
