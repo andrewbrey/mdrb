@@ -28,9 +28,9 @@ Deno.test("toFileURL works", () => {
   const cwd = Deno.cwd();
 
   assertEquals(toFileURL("/a/b/c"), "file:///a/b/c");
-  assertEquals(toFileURL("./d/e/f"), `file://${cwd}/d/e/f`);
+  assertEquals(toFileURL("./d/e/f"), `file://${$.path.join(cwd)}/d/e/f`);
   assertEquals(toFileURL("../d/e/f"), `file://${$.path.join(cwd, "..")}/d/e/f`);
-  assertEquals(toFileURL("file://./abc.ts"), `file://${cwd}/abc.ts`);
-  assertEquals(toFileURL("http://./def.ts"), `file://${cwd}/def.ts`);
-  assertEquals(toFileURL("https://./ghi.ts"), `file://${cwd}/ghi.ts`);
+  assertEquals(toFileURL("file://./abc.ts"), `file://${$.path.join(cwd)}/abc.ts`);
+  assertEquals(toFileURL("http://./def.ts"), `file://${$.path.join(cwd)}/def.ts`);
+  assertEquals(toFileURL("https://./ghi.ts"), `file://${$.path.join(cwd)}/ghi.ts`);
 });
