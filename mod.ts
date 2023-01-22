@@ -1,9 +1,11 @@
-import { $, colors, Command, EnumType, readAll, tokens, ValidationError } from "./deps.ts";
+import { $, colors, Command, EnumType, readAll, ValidationError } from "./deps.ts";
+import { mdCodeBlocks } from "./src/markdown.ts";
+import { invariant, toFileURL } from "./src/util.ts";
 
 /** Current module version */
 export const version = "1.0.1";
 
-/** Execute the specified markdown file */
+/** Execute a markdown file */
 export async function mdrb(args: string[]) {
   const modes = ["runbook", "isolated", "single"] as const;
 
@@ -122,87 +124,6 @@ export async function mdrb(args: string[]) {
       }
     })
     .parse(args);
-}
-
-/** Enforce that a condition is true, and narrow types based on the assertion */
-export function invariant(
-  // deno-lint-ignore no-explicit-any
-  condition: any,
-  message = "invariant failed",
-  // deno-lint-ignore no-explicit-any
-  Err: new (...args: any[]) => Error = Error,
-): asserts condition {
-  if (condition) return;
-
-  throw new Err(message);
-}
-
-/** Enforce that a path is an absolute file-protocol resolved relative to Deno.cwd if necessary */
-export function toFileURL(path: string) {
-  const noProtocol = path
-    .replace(/^https:\/\//, "")
-    .replace(/^http:\/\//, "")
-    .replace(/^file:\/\//, "");
-
-  const absolute = $.path.isAbsolute(noProtocol) ? noProtocol : $.path.join(Deno.cwd(), noProtocol);
-
-  return $.path.toFileUrl(absolute).toString();
-}
-
-/**
- * Extract valid code blocks from the specified markdown content
- *
- * NOTE: this function is adapted from a related feature in
- * [c4spar/deno-dzx](https://github.com/c4spar/deno-dzx/blob/c70a9868fe51d39313e8e1bca0b01ef660cba2b6/src/cli/lib/markdown.ts)
- * and note also that I, @andrewbrey, am the original author
- * of the markdown execution code in `deno-dzx`. Thanks @c4spar
- * for your excellent libraries and for keeping `deno-dzx`
- * permissively licenced so I can re-use my code in my own project!
- */
-export function mdCodeBlocks(mdContent: string, mdFileUrl: string) {
-  const mdTokens = tokens(mdContent);
-  const supportedLanguages = ["js", "javascript", "ts", "typescript"];
-  const codeContent: string[] = [];
-
-  mdTokens.forEach((token, idx) => {
-    if (
-      token.type === "start" &&
-      token.tag === "codeBlock" &&
-      token.kind === "fenced" &&
-      supportedLanguages.includes(token.language)
-    ) {
-      let token;
-      let cursor = idx + 1;
-      while ((token = mdTokens.at(cursor)) && token.type === "text") {
-        codeContent.push(token.content);
-        cursor++;
-      }
-    }
-  });
-
-  const codeBlocks = codeContent
-    .map((code) => replaceImportMeta(code, mdFileUrl))
-    .map((code) => fileProtocolifyLocalImports(code, mdFileUrl))
-    .filter((code) => code.trim().length > 0);
-
-  return codeBlocks;
-}
-
-/** Hard-code an `import.meta.url` value (replacement) for the source markdown module */
-export function replaceImportMeta(code: string, mdFileUrl: string) {
-  return code.replaceAll("import.meta.url", `\"${mdFileUrl}\"`);
-}
-
-/** Ensure that local imports are valid file-protocol URLS relative to the source markdown module */
-export function fileProtocolifyLocalImports(code: string, mdFileUrl: string) {
-  // - handles relative imports of: ts, js
-  // - does not handle relative imports prefixed with a file:// protocol already
-  const relativeImportRegex = /from\s+['"]([\.|\/][^'"]+\.(?:ts|tsx|mts|js|mjs|jsx|cjs|cts))['"]/g;
-
-  return code.replaceAll(
-    relativeImportRegex,
-    (match, file) => match.replace(file, `${new URL(file, mdFileUrl)}`),
-  );
 }
 
 if (import.meta.main) {

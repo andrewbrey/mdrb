@@ -1,0 +1,33 @@
+name: ci
+
+on: [push, pull_request]
+
+concurrency:
+  group: "${{ github.workflow }}-${{ github.event.pull_request.number || github.ref }}"
+  cancel-in-progress: true
+
+jobs:
+  deno:
+    name: mdrb-${{ matrix.os }}
+    if: |
+      github.event_name == 'push' ||
+      !startsWith(github.event.pull_request.head.label, 'andrewbrey:')
+    runs-on: ${{ matrix.os }}
+    timeout-minutes: 10
+    strategy:
+      matrix:
+        os: [ubuntu-latest, macOS-latest, windows-latest]
+
+    steps:
+      - name: Checkout code 🌀
+        uses: actions/checkout@v3
+
+      - name: Install Deno 🦕
+        uses: denoland/setup-deno@v1
+
+      - name: Lint 🧹
+        if: runner.os == 'Linux'
+        run: deno task lint
+
+      - name: Test 🧪
+        run: deno task test
