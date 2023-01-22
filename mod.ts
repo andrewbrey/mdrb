@@ -197,7 +197,7 @@ export function replaceImportMeta(code: string, mdFileUrl: string) {
 export function fileProtocolifyLocalImports(code: string, mdFileUrl: string) {
   // - handles relative imports of: ts, js
   // - does not handle relative imports prefixed with a file:// protocol already
-  const relativeImportRegex = /from\s+['"]([\.|\/][^'"]+\.(?:ts|js))['"]/g;
+  const relativeImportRegex = /from\s+['"]([\.|\/][^'"]+\.(?:ts|tsx|mts|js|mjs|jsx|cjs|cts))['"]/g;
 
   return code.replaceAll(
     relativeImportRegex,
