@@ -50,7 +50,7 @@ export function replaceImportMeta(code: string, mdFileUrl: string) {
 
 /** Ensure that local imports are valid file-protocol URLS relative to the source markdown module */
 export function fileProtocolifyLocalImports(code: string, mdFileUrl: string) {
-  // - handles relative imports of: ts, js
+  // - handles relative imports of: ts, tsx, mts, js, mjs, jsx, cjs, cts
   // - does not handle relative imports prefixed with a file:// protocol already
   const relativeImportRegex = /from\s+['"]([\.|\/][^'"]+\.(?:ts|tsx|mts|js|mjs|jsx|cjs|cts))['"]/g;
 
