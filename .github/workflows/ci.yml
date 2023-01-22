@@ -19,7 +19,7 @@ jobs:
         os: [ubuntu-latest, macOS-latest, windows-latest]
 
     env:
-      DENO_DIR: "$HOME/mdrb_deno_module_cache_dir"
+      DENO_DIR: .deno_cache
 
     steps:
       - name: Checkout code 🌀

@@ -1,5 +1,6 @@
 {
   "fmt": { "options": { "lineWidth": 120 } },
+  "lint": { "files": { "exclude": [".deno_cache"] } },
   "tasks": {
     "test": "deno test -A --unstable --no-check",
     "lint": "deno check --all mod.ts && deno lint --unstable && deno fmt --check",
