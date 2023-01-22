@@ -61,10 +61,7 @@ export async function mdrb(args: string[]) {
 
       let daxImport = "";
       if (dax) {
-        const thisFile = $.path.fromFileUrl(import.meta.url);
-        const thisDir = $.path.dirname(thisFile);
-
-        const daxDepsVersion = Deno.readTextFileSync($.path.join(thisDir, "deps.ts"))
+        const daxDepsVersion = Deno.readTextFileSync($.relativePath(import.meta.url, "deps.ts"))
           .match(/deno.land\/x\/dax@([^\/]+)/)?.at(1) ?? "";
 
         const daxImportVersion = daxDepsVersion ? `dax@${daxDepsVersion}` : "dax";
