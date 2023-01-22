@@ -32,7 +32,7 @@ jobs:
         uses: actions/cache@v2
         with:
           path: ${{ env.DENO_DIR }}
-          key: ${{ runner.os }}-${{ env.MODULE_CACHE_VERSION }}-${{ hashFiles('deno.lock') }}
+          key: ${{ runner.os }}-${{ secrets.MODULE_CACHE_VERSION }}-${{ hashFiles('deno.lock') }}
 
       - name: Cache dependencies ⬇
         run: deno cache --lock=deno.lock deps.ts deps.test.ts
