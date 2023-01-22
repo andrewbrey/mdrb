@@ -2,17 +2,13 @@ import { $, colors, Command, EnumType, readAll, ValidationError } from "./deps.t
 import { mdCodeBlocks } from "./src/markdown.ts";
 import { invariant, toFileURL } from "./src/util.ts";
 
-/** Current module version */
-export const version = "1.0.1";
-
-/** Execute a markdown file */
-export async function mdrb(args: string[]) {
+if (import.meta.main) {
   const modes = ["runbook", "isolated", "single"] as const;
   type Mode = typeof modes[number];
 
   await new Command()
     .name("mdrb")
-    .version(version)
+    .version(Deno.readTextFileSync($.relativePath(import.meta.url, "VERSION")).trim())
     .description($.dedent`
       .${colors.bold("MD")} ${colors.bold("R")}un ${colors.bold("B")}ook
 
@@ -124,9 +120,5 @@ export async function mdrb(args: string[]) {
         }
       }
     })
-    .parse(args);
-}
-
-if (import.meta.main) {
-  await mdrb(Deno.args);
+    .parse(Deno.args);
 }

@@ -59,10 +59,6 @@ module - super handy!
 
 ```ts
 $.log("heeeeey! this will be printed to stderr :)");
-
-const html = await $.request("https://example.com").text();
-
-console.log(html);
 ```
 
 ## That's it for the quick demo
