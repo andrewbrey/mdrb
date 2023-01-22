@@ -67,4 +67,4 @@ console.log(html);
 
 ## That's it for the quick demo
 
-There's more to with `mdrb`, so make sure to read the docs and try it out yourself! Enjoy!
+There's more to try with `mdrb`, so make sure to read the docs and try it out yourself! Enjoy!
