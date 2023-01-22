@@ -22,6 +22,10 @@ export function mdCodeBlocks(mdContent: string, mdFileUrl: string) {
       token.kind === "fenced" &&
       supportedLanguages.includes(token.language)
     ) {
+      // IDEA: inside a code block, could parse metadata
+      //       about this block from comments to expose
+      //       things like titles, descriptions, conditions
+      //       (like "if on windows"), etc.
       let token;
       let cursor = idx + 1;
       while ((token = mdTokens.at(cursor)) && token.type === "text") {
