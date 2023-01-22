@@ -20,7 +20,9 @@ export function toFileURL(path: string) {
     .replace(/^http:\/\//, "")
     .replace(/^file:\/\//, "");
 
-  const absolute = $.path.isAbsolute(noProtocol) ? noProtocol : $.path.join(Deno.cwd(), noProtocol);
+  const absolute = $.path.isAbsolute(noProtocol)
+    ? noProtocol
+    : $.path.join(Deno.cwd().replaceAll($.path.SEP, $.path.posix.sep), noProtocol);
 
   return $.path.toFileUrl(absolute).toString();
 }
