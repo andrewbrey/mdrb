@@ -18,12 +18,24 @@ jobs:
       matrix:
         os: [ubuntu-latest, macOS-latest, windows-latest]
 
+    env:
+      DENO_DIR: deno_module_cache_dir
+
     steps:
       - name: Checkout code 🌀
         uses: actions/checkout@v3
 
       - name: Install Deno 🦕
         uses: denoland/setup-deno@v1
+
+      - name: Setup Deno module cache 🗃
+        uses: actions/cache@v2
+        with:
+          path: ${{ env.DENO_DIR }}
+          key: ${{ runner.os }}-${{ secrets.CACHE_VERSION }}-${{ hashFiles('deno.lock') }}
+
+      - name: Cache dependencies ⬇
+        run: deno cache --lock=deno.lock deps.ts depts.test.ts
 
       - name: Lint 🧹
         if: runner.os == 'Linux'
