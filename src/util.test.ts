@@ -26,7 +26,9 @@ Deno.test("invariant returns if all ok", () => {
 
 Deno.test("toFileURL works", () => {
   const toPosix = (path: string) => path.replaceAll($.path.SEP, $.path.posix.sep);
-  const cwd = toPosix(Deno.cwd());
+  let cwd = toPosix(Deno.cwd());
+
+  if (Deno.build.os === "windows") cwd = `/${cwd}`;
 
   assertEquals(toFileURL("/a/b/c"), "file:///a/b/c");
   assertEquals(toFileURL("./d/e/f"), `file://${cwd}/d/e/f`);
