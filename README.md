@@ -1,6 +1,6 @@
 # Markdown Run Book (_mdrb_)
 
-[![deno doc](https://doc.deno.land/badge.svg)](https://doc.deno.land/https/deno.land/x/mdrb/mod.ts)
+[![deno doc](https://doc.deno.land/badge.svg)](https://doc.deno.land/https/deno.land/x/mdrb)
 
 Execute a markdown file with Deno.
 
