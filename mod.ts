@@ -8,6 +8,7 @@ export const version = "1.0.1";
 /** Execute a markdown file */
 export async function mdrb(args: string[]) {
   const modes = ["runbook", "isolated", "single"] as const;
+  type Mode = typeof modes[number];
 
   await new Command()
     .name("mdrb")
@@ -22,6 +23,7 @@ export async function mdrb(args: string[]) {
     .option("-d, --dax <dax:boolean>", "inject dax", { default: true })
     .arguments("[file]")
     .action(async ({ mode, dax }, file = "") => {
+      let executionMode: Mode = mode as Mode;
       let mdContent;
       let mdFileUrl;
 
@@ -29,9 +31,11 @@ export async function mdrb(args: string[]) {
       const fileIsRemote = file.startsWith("http://") || file.startsWith("https://");
       const stdinIsTTY = Deno.isatty(Deno.stdin.rid);
 
+      if (executionMode === "runbook" && !stdinIsTTY) executionMode = "isolated";
+
       if (fileIsMD || fileIsRemote) {
         if (fileIsRemote) {
-          mdContent = await $.request(file).timeout(30_000).noThrow().text();
+          mdContent = await $.request(file).timeout(30_000).noThrow().text().catch(() => "");
           mdFileUrl = toFileURL("mdrb-remote.md");
         } else {
           invariant(await $.exists(file), `no file exists at ${file}`, ValidationError);
@@ -68,7 +72,7 @@ export async function mdrb(args: string[]) {
         daxImport = `import { $ } from "https://deno.land/x/${daxImportVersion}/mod.ts";`;
       }
 
-      switch (mode as typeof modes[number]) {
+      switch (executionMode) {
         case "isolated": {
           for await (const [strIdx, block] of Object.entries(codeBlocks)) {
             const idx = parseInt(strIdx);

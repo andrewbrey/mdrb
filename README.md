@@ -22,7 +22,10 @@ mdrb demo.md
 # you can also pipe the file to `mdrb` but
 # note that you can't use `runbook`
 # mode (the default) when doing so because
-# a tty is required for interactive prompts
+# a tty is required for interactive prompts;
+# mode will be changed to `isolated` for
+# you in this scenario unless you manually
+# specify a mode other than `runbook`
 cat demo.md | mdrb --mode isolated
 ```
 
