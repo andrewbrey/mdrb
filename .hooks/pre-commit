@@ -1,3 +1,20 @@
 #!/usr/bin/env -S deno run -A --unstable
 
-/* apply pre-commit logic as needed */
+import { gt } from "../deps.dev.ts";
+import { $, colors } from "../deps.ts";
+
+const root = $.relativePath(import.meta.url, "..");
+
+const latestTag = await $`git describe --tags --abbrev=0`.cwd(root).text();
+const nextVersion = await Deno.readTextFile($.path.join(root, "VERSION"));
+
+const nextIsNewer = gt(nextVersion, latestTag);
+
+if (!nextIsNewer) {
+  throw new Error($.dedent`
+    ${colors.red(`VERSION is out of date`)}
+
+    Latest git tag is ${colors.yellow(latestTag)} and VERSION is set to ${colors.blue(nextVersion)}
+
+  `);
+}
