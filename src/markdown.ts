@@ -77,6 +77,6 @@ export function fileProtocolifyLocalImports(code: string, mdFileUrl: string) {
 
   return code.replaceAll(
     relativeImportRegex,
-    (match, file) => match.replace(file, `${new URL(file, mdFileUrl)}`),
+    (match, file) => match.replace(file, `${new URL(file, mdFileUrl)}`).replaceAll("'", '"'),
   );
 }
