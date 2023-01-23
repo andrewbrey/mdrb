@@ -1,3 +1,7 @@
 #!/usr/bin/env -S deno run -A --unstable
 
-/* apply pre-push logic as needed */
+import { $ } from "../deps.ts";
+
+const root = $.relativePath(import.meta.url, "..");
+
+await $`deno task test`.cwd(root);
