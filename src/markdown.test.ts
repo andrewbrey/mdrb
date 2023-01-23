@@ -1,4 +1,4 @@
-import { assertEquals } from "../deps.dev.ts";
+import { assertEquals, assertThrows } from "../deps.dev.ts";
 import { $ } from "../deps.ts";
 import { fileProtocolifyLocalImports, mdCodeBlocks, replaceImportMeta } from "./markdown.ts";
 
@@ -10,8 +10,8 @@ Deno.test("mdCodeBlocks works for posix", () => {
   for (const ext of "ts|typescript|js|javascript".split("|")) {
     const code = $.dedent`
       ${FENCE}${ext}
-      import mod from './mod.ts';
-      console.log('hello world');
+      import mod from "./mod.ts";
+      console.log("hello world");
       ${FENCE}
     `;
 
@@ -21,8 +21,8 @@ Deno.test("mdCodeBlocks works for posix", () => {
     assertEquals(
       blocks.at(0),
       $.dedent`
-        import mod from 'file://a/b/mod.ts';
-        console.log('hello world');\n
+        import mod from "file://a/b/mod.ts";
+        console.log("hello world");\n
       `,
     );
   }
@@ -34,8 +34,8 @@ Deno.test("mdCodeBlocks works for windows", () => {
   for (const ext of "ts|typescript|js|javascript".split("|")) {
     const code = $.dedent`
       ${FENCE}${ext}
-      import mod from './mod.ts';
-      console.log('hello world');
+      import mod from "./mod.ts";
+      console.log("hello world");
       ${FENCE}
     `;
 
@@ -45,8 +45,8 @@ Deno.test("mdCodeBlocks works for windows", () => {
     assertEquals(
       blocks.at(0),
       $.dedent`
-        import mod from 'file:///D:/a/b/mod.ts';
-        console.log('hello world');\n
+        import mod from "file:///D:/a/b/mod.ts";
+        console.log("hello world");\n
       `,
     );
   }
@@ -58,18 +58,18 @@ Deno.test("mdCodeBlocks works for multiple blocks", () => {
   for (const ext of "ts|typescript|js|javascript".split("|")) {
     const code = $.dedent`
       ${FENCE}${ext}
-      import mod from './mod.ts';
-      console.log('hello world1');
+      import mod from "./mod.ts";
+      console.log("hello world1");
       ${FENCE}
 
       ${FENCE}${ext}
-      import mod from './mod.ts';
-      console.log('hello world2');
+      import mod from "./mod.ts";
+      console.log("hello world2");
       ${FENCE}
 
       ${FENCE}${ext}
-      import mod from './mod.ts';
-      console.log('hello world3');
+      import mod from "./mod.ts";
+      console.log("hello world3");
       ${FENCE}
     `;
 
@@ -80,8 +80,8 @@ Deno.test("mdCodeBlocks works for multiple blocks", () => {
       assertEquals(
         blocks.at(idx - 1),
         $.dedent`
-          import mod from 'file://a/b/mod.ts';
-          console.log('hello world${idx}');\n
+          import mod from "file://a/b/mod.ts";
+          console.log("hello world${idx}");\n
         `,
       );
     }
@@ -114,8 +114,8 @@ Deno.test("mdCodeBlocks works for tilde blocks", () => {
   for (const ext of "ts|typescript|js|javascript".split("|")) {
     const code = $.dedent`
       ~~~${ext}
-      import mod from './mod.ts';
-      console.log('hello world');
+      import mod from "./mod.ts";
+      console.log("hello world");
       ~~~
     `;
 
@@ -125,8 +125,8 @@ Deno.test("mdCodeBlocks works for tilde blocks", () => {
     assertEquals(
       blocks.at(0),
       $.dedent`
-        import mod from 'file://a/b/mod.ts';
-        console.log('hello world');\n
+        import mod from "file://a/b/mod.ts";
+        console.log("hello world");\n
       `,
     );
   }
@@ -142,6 +142,20 @@ Deno.test("mdCodeBlocks ignores inline code", () => {
   const blocks = mdCodeBlocks(code, url);
 
   assertEquals(blocks.length, 0);
+});
+
+Deno.test("mdCodeBlocks throws on single-quotes", () => {
+  assertThrows(() => {
+    const url = "file://a/b/c.ts";
+
+    const code = $.dedent`
+      ~~~ts
+      console.log('hello world');
+      ~~~
+    `;
+
+    mdCodeBlocks(code, url);
+  });
 });
 
 Deno.test("replaceImportMeta works for posix", () => {

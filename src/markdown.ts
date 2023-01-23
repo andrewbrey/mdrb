@@ -1,4 +1,4 @@
-import { tokens } from "../deps.ts";
+import { $, colors, tokens } from "../deps.ts";
 
 /**
  * Extract valid code blocks from the specified markdown content
@@ -34,6 +34,24 @@ export function mdCodeBlocks(mdContent: string, mdFileUrl: string) {
         cursor++;
         cursorToken = mdTokens.at(cursor);
       }
+
+      if (codeBlock.includes("'")) {
+        throw new Error(
+          $.dedent`
+            ${colors.red("Illegal character in code block")}
+
+            Single-quote characters (') are not allowed anywhere within executed code blocks (even comments)
+
+            mdrb encodes executed code blocks with encodeURIComponent, and single-quotes are not part of the
+            encoded character set, so their presence causes the block to be non-parseable when executed.
+
+            See https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/encodeURIComponent#description
+            for more details on how code blocks will be encoded.
+
+          `,
+        );
+      }
+
       codeContent.push(codeBlock);
     }
   });
