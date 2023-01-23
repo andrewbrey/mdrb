@@ -35,7 +35,7 @@ jobs:
           key: ${{ runner.os }}-${{ secrets.MODULE_CACHE_VERSION }}-${{ hashFiles('deno.lock') }}
 
       - name: Cache dependencies ⬇
-        run: deno cache --lock=deno.lock deps.ts deps.test.ts
+        run: deno cache --lock=deno.lock deps.ts deps.dev.ts
 
       - name: Lint 🧹
         if: runner.os == 'Linux'

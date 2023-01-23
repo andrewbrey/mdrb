@@ -4,6 +4,6 @@
   "tasks": {
     "test": "deno test -A --unstable --no-check",
     "lint": "deno check --all mod.ts && deno lint --unstable && deno fmt --check",
-    "deps": "deno run --allow-read=. --allow-write=. --allow-net https://deno.land/x/udd/main.ts deps.ts deps.test.ts"
+    "deps": "deno run --allow-read=. --allow-write=. --allow-net https://deno.land/x/udd/main.ts deps.ts deps.dev.ts"
   }
 }
