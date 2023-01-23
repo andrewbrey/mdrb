@@ -1,4 +1,4 @@
-export { deadline } from "https://deno.land/std@0.173.0/async/mod.ts";
+export { serve } from "https://deno.land/std@0.173.0/http/server.ts";
 export {
   assert,
   assertEquals,
