@@ -1,0 +1,3 @@
+#!/usr/bin/env -S deno run -A --unstable
+
+/* apply pre-commit logic as needed */
