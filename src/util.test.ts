@@ -1,4 +1,4 @@
-import { assertEquals, assertInstanceOf, assertThrows } from "../deps.test.ts";
+import { assertEquals, assertInstanceOf, assertThrows } from "../deps.dev.ts";
 import { $ } from "../deps.ts";
 import { invariant, toFileURL } from "./util.ts";
 

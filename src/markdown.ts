@@ -15,36 +15,33 @@ export function mdCodeBlocks(mdContent: string, mdFileUrl: string) {
   const supportedLanguages = ["js", "javascript", "ts", "typescript"];
   const codeContent: string[] = [];
 
-  mdTokens.forEach((token, idx) => {
+  mdTokens.forEach((mdToken, idx) => {
     if (
-      token.type === "start" &&
-      token.tag === "codeBlock" &&
-      token.kind === "fenced" &&
-      supportedLanguages.includes(token.language)
+      mdToken.type === "start" &&
+      mdToken.tag === "codeBlock" &&
+      mdToken.kind === "fenced" &&
+      supportedLanguages.includes(mdToken.language)
     ) {
       // IDEA: inside a code block, could parse metadata
       //       about this block from comments to expose
       //       things like titles, descriptions, conditions
       //       (like "if on windows"), etc.
-      let token;
+      let codeBlock = "";
       let cursor = idx + 1;
-      while ((token = mdTokens.at(cursor)) && token.type === "text") {
-        codeContent.push(token.content);
+      let cursorToken = mdTokens.at(cursor);
+      while (cursorToken && cursorToken.type === "text") {
+        codeBlock += cursorToken.content;
         cursor++;
+        cursorToken = mdTokens.at(cursor);
       }
+      codeContent.push(codeBlock);
     }
   });
-
-  // TODO: remove debug logs
-  console.log("codeContent", codeContent);
 
   const codeBlocks = codeContent
     .map((code) => replaceImportMeta(code, mdFileUrl))
     .map((code) => fileProtocolifyLocalImports(code, mdFileUrl))
     .filter((code) => code.trim().length > 0);
-
-  // TODO: remove debug logs
-  console.log("codeBlocks", codeBlocks);
 
   return codeBlocks;
 }
