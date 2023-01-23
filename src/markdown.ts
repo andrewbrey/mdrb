@@ -35,10 +35,16 @@ export function mdCodeBlocks(mdContent: string, mdFileUrl: string) {
     }
   });
 
+  // TODO: remove debug logs
+  console.log("codeContent", codeContent);
+
   const codeBlocks = codeContent
     .map((code) => replaceImportMeta(code, mdFileUrl))
     .map((code) => fileProtocolifyLocalImports(code, mdFileUrl))
     .filter((code) => code.trim().length > 0);
+
+  // TODO: remove debug logs
+  console.log("codeBlocks", codeBlocks);
 
   return codeBlocks;
 }
