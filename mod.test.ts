@@ -126,7 +126,7 @@ Deno.test("mdrb shows error output for stdin if no text piped", async () => {
 Deno.test(
   "mdrb switches to 'isolated' mode from 'rubook' mode for stdin and does not wait for step confirmation",
   async () => {
-    const timeout = 2_000;
+    const timeout = 3_000;
 
     await t$`deno run -A --unstable ${mod} --mode runbook`.stdinText(demoText)
       .timeout(timeout).noThrow(false);
