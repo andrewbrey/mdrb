@@ -1,8 +1,13 @@
 # Markdown Run Book (_mdrb_)
 
-[![deno doc](https://doc.deno.land/badge.svg)](https://doc.deno.land/https/deno.land/x/mdrb)
+[![deno badge](https://img.shields.io/badge/deno.land/x/mdrb-success?logo=deno&logoColor=black&labelColor=white&color=black)](https://deno.land/x/mdrb)
+[![ci](https://github.com/andrewbrey/mdrb/workflows/ci/badge.svg)](https://github.com/andrewbrey/mdrb/actions)
 
-Execute a markdown file with Deno.
+<img src=".github/logo.png" height="150px" alt="mdrb logo which consists of underlined text spelling out a period followed by the letters m, d, r, and b">
+
+> _Turn your Markdown documentation into executable runbooks._
+
+---
 
 ## Install
 
