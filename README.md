@@ -53,8 +53,10 @@ When provided a Markdown file (or a remote URL that points to one, or pipe the c
 1. Execute the code blocks according to the chosen mode; by default the "`runbook`" mode is used, which treats each code
    block as an isolated script and execution is paused awaiting your confirmation before going on.
    - "`isolated`" mode is the same as "`runbook`" mode, except that there is no pause to prompt between each code block.
+     This is the mode used instead of `runbook` for all _piped_ content due to the absence of a `tty`.
    - "`single`" mode concatenates your code blocks together as if they were all a single script and executes the
-     resulting _single_ block.
+     resulting _single_ block. In this mode, your code blocks can depend on each other, but be careful about things like
+     re-declaring variables across code blocks - at runtime, they aren't isolated from each other!
 
 ## Installation
 
@@ -75,6 +77,14 @@ deno install -Arfn mdrb https://deno.land/x/mdrb/mod.ts
 > confirmation to proceed.
 
 <img src=".github/usage-basic.gif" alt="demonstration of using mdrb to execute the demo markdown file included in the source repository">
+
+🧪 Try it yourself with:
+
+```sh
+mdrb https://deno.land/mdrb/demo.md
+```
+
+> note that we can just reference the demo Markdown by a URL
 
 ## Prior Art
 
