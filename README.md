@@ -1,19 +1,34 @@
-# Markdown Run Book (_mdrb_)
+<h1 align="center">
+  <br>
+    <img src=".github/logo.png" height="150px" alt="mdrb logo which consists of underlined text spelling out a period followed by the letters m, d, r, and b">
+  <br>
+  Markdown Run Book
+  <br>
+  <br>
+</h1>
 
-[![deno badge](https://img.shields.io/badge/deno.land/x/mdrb-success?logo=deno&logoColor=black&labelColor=white&color=black)](https://deno.land/x/mdrb)
-[![ci](https://github.com/andrewbrey/mdrb/workflows/ci/badge.svg)](https://github.com/andrewbrey/mdrb/actions)
+<p align="center">Turn your Markdown documentation into executable runbooks.</p>
 
-<img src=".github/logo.png" height="150px" alt="mdrb logo which consists of underlined text spelling out a period followed by the letters m, d, r, and b">
-
-> _Turn your Markdown documentation into executable runbooks._
+<p align="center">
+  <a href="https://github.com/andrewbrey/mdrb/actions/workflows/ci.yml">
+    <img src="https://github.com/andrewbrey/mdrb/workflows/ci/badge.svg" alt="github actions status badge">
+  </a>
+  <a href="https://deno.land/x/mdrb">
+    <img src="https://img.shields.io/badge/deno.land/x/mdrb-success?logo=deno&logoColor=black&labelColor=white&color=black" alt="deno third-party module badge">
+  </a>
+</p>
 
 ---
 
-## Install
+## Installation
 
 ```sh
-deno install --unstable -Arfn mdrb https://deno.land/x/mdrb/mod.ts
+deno install -Arfn mdrb https://deno.land/x/mdrb/mod.ts
 ```
+
+> Note: if you prefer not to bake `--allow-all` permissions (with the `-A` flag) into the installed command, you can
+> specify alternate permissions, e.g. `deno install --allow-net -rfn mdrb https://deno.land/x/mdrb/mod.ts` but be aware
+> that this means you will be prompted for permissions at runtime.
 
 ### Demo
 
