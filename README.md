@@ -30,7 +30,7 @@ deno install -Arfn mdrb https://deno.land/x/mdrb/mod.ts
 > specify alternate permissions, e.g. `deno install --allow-net -rfn mdrb https://deno.land/x/mdrb/mod.ts` but be aware
 > that this means you will be prompted for permissions at runtime.
 
-### Demo
+## Demo
 
 ```sh
 # execute the mdrb demo from its url
@@ -49,8 +49,12 @@ mdrb demo.md
 cat demo.md | mdrb --mode isolated
 ```
 
-#### Prior Art
+## Prior Art
 
+- https://github.com/jacobdeichert/mask
 - https://github.com/c4spar/deno-dzx
 - https://github.com/google/zx
-- https://github.com/jacobdeichert/mask
+
+## License
+
+[MIT](./LICENSE). Copyright (c) [Andrew Brey](https://andrewbrey.com)
