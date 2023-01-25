@@ -115,15 +115,6 @@ mdrb https://deno.land/mdrb/demo.md
 
 <img src=".github/usage-no-dax.gif" alt="demonstration of the fact that you can pass dax equals false to the mdrb command line and the dollar object will not be added">
 
-## Gotchas
-
-1. You can't have **any** single quote characters (`'`) inside any `ts/js` code blocks, or a runtime error will be
-   thrown.
-   - This is due to a limitation in which characters are URL encoded by `encodeURIComponent` (notably, single quotes not
-     being encoded), and the fact that `mdrb` runs your code blocks as a URL encoded data URI internally.
-   - This limitation may be addressed later, but for now, throwing is the only good option if single quotes are
-     encountered when parsing out the executable code blocks.
-
 ## Prior Art
 
 - https://github.com/jacobdeichert/mask

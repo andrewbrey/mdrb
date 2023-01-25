@@ -1,4 +1,4 @@
-import { assertEquals, assertThrows } from "../deps.dev.ts";
+import { assertEquals } from "../deps.dev.ts";
 import { $ } from "../deps.ts";
 import { fileProtocolifyLocalImports, mdCodeBlocks, replaceImportMeta } from "./markdown.ts";
 
@@ -144,18 +144,21 @@ Deno.test("mdCodeBlocks ignores inline code", () => {
   assertEquals(blocks.length, 0);
 });
 
-Deno.test("mdCodeBlocks throws on single-quotes", () => {
-  assertThrows(() => {
-    const url = "file://a/b/c.ts";
+Deno.test("mdCodeBlocks does not throw on single-quotes", () => {
+  const url = "file://a/b/c.ts";
 
-    const code = $.dedent`
-      ~~~ts
-      console.log('hello world');
-      ~~~
-    `;
+  const code = $.dedent`
+    ~~~ts
+    // this comment has 'single quotes'
+    import mod from '${url}'; // import with single-quotes
 
-    mdCodeBlocks(code, url);
-  });
+    console.log('hello world');
+    console.log("this shouldn't throw");
+    console.log(\`this shouldn't either\`)
+    ~~~
+  `;
+
+  mdCodeBlocks(code, url);
 });
 
 Deno.test("replaceImportMeta works for posix", () => {

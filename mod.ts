@@ -55,14 +55,14 @@ if (import.meta.main) {
 
       invariant(codeBlocks.length > 0, noCodeMsg, ValidationError);
 
-      let daxImport = "";
+      let maybeDaxImport = "";
       if (dax) {
         const daxDepsVersion = Deno.readTextFileSync($.relativePath(import.meta.url, "deps.ts"))
           .match(/deno.land\/x\/dax@([^\/]+)/)?.at(1) ?? "";
 
         const daxImportVersion = daxDepsVersion ? `dax@${daxDepsVersion}` : "dax";
 
-        daxImport = `import { $ } from "https://deno.land/x/${daxImportVersion}/mod.ts";`;
+        maybeDaxImport = `import { $ } from "https://deno.land/x/${daxImportVersion}/mod.ts";\n`;
       }
 
       switch (executionMode) {
@@ -74,16 +74,14 @@ if (import.meta.main) {
 
             $.logStep("step:", prettyIdx, "of", blockCount);
 
-            const encoded = `data:application/typescript,${encodeURIComponent([`${daxImport}\n`, block].join(""))}`;
+            const encoded = asDataURI([maybeDaxImport, block]);
 
             await $.raw`deno eval 'await import("${encoded}")'`;
           }
           break;
         }
         case "single": {
-          const encoded = `data:application/typescript,${
-            encodeURIComponent([`${daxImport}\n`, ...codeBlocks].join(""))
-          }`;
+          const encoded = asDataURI([maybeDaxImport, ...codeBlocks]);
 
           await $.raw`deno eval 'await import("${encoded}")'`;
           break;
@@ -96,7 +94,7 @@ if (import.meta.main) {
 
             $.logStep("step:", prettyIdx, "of", blockCount);
 
-            const encoded = `data:application/typescript,${encodeURIComponent([`${daxImport}\n`, block].join(""))}`;
+            const encoded = asDataURI([maybeDaxImport, block]);
 
             await $.raw`deno eval 'await import("${encoded}")'`;
 
@@ -121,4 +119,18 @@ if (import.meta.main) {
       }
     })
     .parse(Deno.args);
+}
+
+/**
+ * Encode the specified code blocks as a TypeScript
+ * data URI, handling the fact that certain characters
+ * (like single-quotes) are not encoded by
+ * `encodeURIComponent` by simply manually replacing
+ * them after encoding.
+ */
+function asDataURI(blocks: string[]) {
+  return `data:application/typescript,${
+    encodeURIComponent(blocks.join(""))
+      .replaceAll("'", "%27")
+  }`;
 }
