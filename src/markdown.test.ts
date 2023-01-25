@@ -161,6 +161,241 @@ Deno.test("mdCodeBlocks does not throw on single-quotes", () => {
   mdCodeBlocks(code, url);
 });
 
+Deno.test("mdCodeBlocks parses configuration", () => {
+  const url = "file://a/b/c.ts";
+  const summary = "a very good step summary";
+
+  const code = $.dedent`
+    ~~~ts
+    console.log(import.meta.url)
+    ~~~
+
+    <details data-mdrb>
+    <summary>${summary}</summary>
+
+    <pre>
+    key1 = "value1"
+
+    [second]
+    name = "value2"
+    </pre>
+    </details>
+  `;
+
+  const blocks = mdCodeBlocks(code, url);
+
+  assertEquals(blocks.length, 1);
+  assertEquals(blocks.at(0)?.summary, summary);
+  assertEquals(blocks.at(0)?.config, { key1: "value1", second: { name: "value2" } });
+});
+
+Deno.test("mdCodeBlocks requires the data-mdrb attribute on configuration", () => {
+  const url = "file://a/b/c.ts";
+  const summary = "a very good step summary";
+
+  const code = $.dedent`
+    ~~~ts
+    console.log(import.meta.url)
+    ~~~
+
+    <details>
+    <summary>${summary}</summary>
+
+    <pre>
+    key1 = "value1"
+
+    [second]
+    name = "value2"
+    </pre>
+    </details>
+  `;
+
+  const blocks = mdCodeBlocks(code, url);
+
+  assertEquals(blocks.length, 1);
+  assertEquals(blocks.at(0)?.summary, "");
+  assertEquals(blocks.at(0)?.config, {});
+});
+
+Deno.test("mdCodeBlocks configuration must immdiately follow code blocks", () => {
+  const url = "file://a/b/c.ts";
+  const summary = "a very good step summary";
+
+  const code = $.dedent`
+    ~~~ts
+    console.log(import.meta.url)
+    ~~~
+
+    # a header between the code and configuration
+
+    <details>
+    <summary>${summary}</summary>
+
+    <pre>
+    key1 = "value1"
+
+    [second]
+    name = "value2"
+    </pre>
+    </details>
+  `;
+
+  const blocks = mdCodeBlocks(code, url);
+
+  assertEquals(blocks.length, 1);
+  assertEquals(blocks.at(0)?.summary, "");
+  assertEquals(blocks.at(0)?.config, {});
+});
+
+Deno.test("mdCodeBlocks configuration does not require a summary", () => {
+  const url = "file://a/b/c.ts";
+
+  const code = $.dedent`
+    ~~~ts
+    console.log(import.meta.url)
+    ~~~
+
+    <details data-mdrb>
+
+    <pre>
+    key1 = "value1"
+
+    [second]
+    name = "value2"
+    </pre>
+    </details>
+  `;
+
+  const blocks = mdCodeBlocks(code, url);
+
+  assertEquals(blocks.length, 1);
+  assertEquals(blocks.at(0)?.summary, "");
+  assertEquals(blocks.at(0)?.config, { key1: "value1", second: { name: "value2" } });
+});
+
+Deno.test("mdCodeBlocks configuration can have only a summary", () => {
+  const url = "file://a/b/c.ts";
+  const summary = "a very good step summary";
+
+  const code = $.dedent`
+    ~~~ts
+    console.log(import.meta.url)
+    ~~~
+
+    <details data-mdrb>
+    <summary>${summary}</summary>
+    </details>
+  `;
+
+  const blocks = mdCodeBlocks(code, url);
+
+  assertEquals(blocks.length, 1);
+  assertEquals(blocks.at(0)?.summary, summary);
+  assertEquals(blocks.at(0)?.config, {});
+});
+
+Deno.test("mdCodeBlocks configuration can no details", () => {
+  const url = "file://a/b/c.ts";
+
+  const code = $.dedent`
+    ~~~ts
+    console.log(import.meta.url)
+    ~~~
+
+    <details data-mdrb>
+    
+    </details>
+  `;
+
+  const blocks = mdCodeBlocks(code, url);
+
+  assertEquals(blocks.length, 1);
+  assertEquals(blocks.at(0)?.summary, "");
+  assertEquals(blocks.at(0)?.config, {});
+});
+
+Deno.test("mdCodeBlocks configuration pre must have a preceeding newline to behave as expected", () => {
+  const url = "file://a/b/c.ts";
+
+  const code = $.dedent`
+    ~~~ts
+    console.log(import.meta.url)
+    ~~~
+
+    <details data-mdrb>
+    <summary>test1</summary>
+    <pre>
+    key1 = "value1"
+
+    [second]
+    name = "value2"
+    </pre>
+    </details>
+
+    ~~~ts
+    console.log(import.meta.url)
+    ~~~
+
+    <details data-mdrb>
+    <summary>test2</summary>
+
+    <pre>
+    key1 = "value3"
+
+    [second]
+    name = "value4"
+    </pre>
+    </details>
+  `;
+
+  const blocks = mdCodeBlocks(code, url);
+
+  assertEquals(blocks.length, 2);
+  assertEquals(blocks.at(0)?.summary, "test1");
+  assertEquals(blocks.at(0)?.config, { key1: "value1" });
+  assertEquals(blocks.at(1)?.summary, "test2");
+  assertEquals(blocks.at(1)?.config, { key1: "value3", second: { name: "value4" } });
+});
+
+Deno.test("mdCodeBlocks different blocks can have different configuration", () => {
+  const url = "file://a/b/c.ts";
+  const summary = "a very good step summary";
+
+  const code = $.dedent`
+    ~~~ts
+    console.log(import.meta.url)
+    ~~~
+
+    <details data-mdrb>
+    <summary>${summary}</summary>
+
+    <pre>
+    key = "value1"
+    </pre>
+    </details>
+
+    ~~~ts
+    console.log(import.meta.url)
+    ~~~
+
+    <details data-mdrb>
+    <summary>${summary + " 2"}</summary>
+
+    <pre>
+    key = "value2"
+    </pre>
+    </details>
+  `;
+
+  const blocks = mdCodeBlocks(code, url);
+
+  assertEquals(blocks.length, 2);
+  assertEquals(blocks.at(0)?.summary, summary);
+  assertEquals(blocks.at(0)?.config, { key: "value1" });
+  assertEquals(blocks.at(1)?.summary, summary + " 2");
+  assertEquals(blocks.at(1)?.config, { key: "value2" });
+});
+
 Deno.test("replaceImportMeta works for posix", () => {
   const url = "file://a/b/c.ts";
 
