@@ -1,4 +1,4 @@
-import { $, cheerio, colors, tokens } from "../deps.ts";
+import { tokens } from "../deps.ts";
 
 /**
  * Extract valid code blocks from the specified markdown content
