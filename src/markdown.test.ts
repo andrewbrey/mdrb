@@ -19,7 +19,7 @@ Deno.test("mdCodeBlocks works for posix", () => {
 
     assertEquals(blocks.length, 1);
     assertEquals(
-      blocks.at(0),
+      blocks.at(0)?.code,
       $.dedent`
         import mod from "file://a/b/mod.ts";
         console.log("hello world");\n
@@ -43,7 +43,7 @@ Deno.test("mdCodeBlocks works for windows", () => {
 
     assertEquals(blocks.length, 1);
     assertEquals(
-      blocks.at(0),
+      blocks.at(0)?.code,
       $.dedent`
         import mod from "file:///D:/a/b/mod.ts";
         console.log("hello world");\n
@@ -78,7 +78,7 @@ Deno.test("mdCodeBlocks works for multiple blocks", () => {
     assertEquals(blocks.length, 3);
     for (const idx of [1, 2, 3]) {
       assertEquals(
-        blocks.at(idx - 1),
+        blocks.at(idx - 1)?.code,
         $.dedent`
           import mod from "file://a/b/mod.ts";
           console.log("hello world${idx}");\n
@@ -123,7 +123,7 @@ Deno.test("mdCodeBlocks works for tilde blocks", () => {
 
     assertEquals(blocks.length, 1);
     assertEquals(
-      blocks.at(0),
+      blocks.at(0)?.code,
       $.dedent`
         import mod from "file://a/b/mod.ts";
         console.log("hello world");\n

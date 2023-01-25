@@ -74,14 +74,14 @@ if (import.meta.main) {
 
             $.logStep("step:", prettyIdx, "of", blockCount);
 
-            const encoded = asDataURI([maybeDaxImport, block]);
+            const encoded = asDataURI([maybeDaxImport, block.code]);
 
             await $.raw`deno eval 'await import("${encoded}")'`;
           }
           break;
         }
         case "single": {
-          const encoded = asDataURI([maybeDaxImport, ...codeBlocks]);
+          const encoded = asDataURI([maybeDaxImport, ...codeBlocks.map((b) => b.code)]);
 
           await $.raw`deno eval 'await import("${encoded}")'`;
           break;
@@ -94,7 +94,7 @@ if (import.meta.main) {
 
             $.logStep("step:", prettyIdx, "of", blockCount);
 
-            const encoded = asDataURI([maybeDaxImport, block]);
+            const encoded = asDataURI([maybeDaxImport, block.code]);
 
             await $.raw`deno eval 'await import("${encoded}")'`;
 

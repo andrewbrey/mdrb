@@ -1,4 +1,10 @@
-import { tokens } from "../deps.ts";
+import { $ } from "../deps.ts";
+
+type CodeBlock = {
+  code: string;
+  summary: string;
+  config: Record<string, unknown>;
+};
 
 /**
  * Extract valid code blocks from the specified markdown content
@@ -11,9 +17,9 @@ import { tokens } from "../deps.ts";
  * permissively licenced so I can re-use my code in my own project!
  */
 export function mdCodeBlocks(mdContent: string, mdFileUrl: string) {
-  const mdTokens = tokens(mdContent);
+  const blocks: CodeBlock[] = [];
   const supportedLanguages = ["js", "javascript", "ts", "typescript"];
-  const codeContent: string[] = [];
+  const mdTokens = $.parseMarkdown(mdContent);
 
   mdTokens.forEach((mdToken, idx) => {
     if (
@@ -22,29 +28,51 @@ export function mdCodeBlocks(mdContent: string, mdFileUrl: string) {
       mdToken.kind === "fenced" &&
       supportedLanguages.includes(mdToken.language)
     ) {
-      // IDEA: inside a code block, could parse metadata
-      //       about this block from comments to expose
-      //       things like titles, descriptions, conditions
-      //       (like "if on windows"), etc.
-      let codeBlock = "";
+      const block: CodeBlock = {
+        code: "",
+        summary: "",
+        config: {},
+      };
+
       let cursor = idx + 1;
       let cursorToken = mdTokens.at(cursor);
       while (cursorToken && cursorToken.type === "text") {
-        codeBlock += cursorToken.content;
+        block.code += cursorToken.content;
         cursor++;
         cursorToken = mdTokens.at(cursor);
       }
 
-      codeContent.push(codeBlock);
+      if (!block.code.trim().length) return;
+
+      cursor++;
+      cursorToken = mdTokens.at(cursor);
+      let blockConfig = "";
+      while (cursorToken && cursorToken.type === "html") {
+        blockConfig += cursorToken.content;
+        cursor++;
+        cursorToken = mdTokens.at(cursor);
+      }
+
+      // ode to the ol' jquery naming conventions :)
+      const $blockConfig = $.parseHTML(blockConfig);
+      const $details = $blockConfig("details[data-mdrb]");
+      const $summary = $blockConfig("summary", $details);
+      const $pre = $blockConfig("pre", $details);
+      const details = ($pre.text() ?? "").trim();
+
+      block.summary = ($summary.text() ?? "").trim();
+      block.config = details ? $.parseTOML(details) : {};
+
+      blocks.push(block);
     }
   });
 
-  const codeBlocks = codeContent
-    .map((code) => replaceImportMeta(code, mdFileUrl))
-    .map((code) => fileProtocolifyLocalImports(code, mdFileUrl))
-    .filter((code) => code.trim().length > 0);
+  for (const b of blocks) {
+    b.code = replaceImportMeta(b.code, mdFileUrl);
+    b.code = fileProtocolifyLocalImports(b.code, mdFileUrl);
+  }
 
-  return codeBlocks;
+  return blocks;
 }
 
 /** Hard-code an `import.meta.url` value (replacement) for the source markdown module */
