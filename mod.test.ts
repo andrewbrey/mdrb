@@ -44,11 +44,11 @@ Deno.test("mdrb works with local file", async () => {
   const { combined } = await t$`deno run -A --unstable ${mod} ${demo}`.stdinText("");
 
   const expected = $.dedent`
-    step: 1 of 3
+    step 1 of 3 // say hello to the world
     Hello MDRB!
-    step: 2 of 3
+    step 2 of 3 // say hello to the world again
     Hello (again) MDRB!
-    step: 3 of 3
+    step 3 of 3 // log a final message to standard error
     heeeeey! this will be printed to stderr :)
   `;
 
@@ -78,11 +78,11 @@ Deno.test("mdrb works with http", async () => {
     const { combined } = await t$`deno run -A --unstable ${mod} ${url}`.stdinText("");
 
     const expected = $.dedent`
-      step: 1 of 3
+      step 1 of 3 // say hello to the world
       Hello MDRB!
-      step: 2 of 3
+      step 2 of 3 // say hello to the world again
       Hello (again) MDRB!
-      step: 3 of 3
+      step 3 of 3 // log a final message to standard error
       heeeeey! this will be printed to stderr :)
     `;
 
@@ -105,11 +105,11 @@ Deno.test("mdrb works with stdin", async () => {
   const { combined } = await t$`deno run -A --unstable ${mod}`.stdinText(demoText);
 
   const expected = $.dedent`
-    step: 1 of 3
+    step 1 of 3 // say hello to the world
     Hello MDRB!
-    step: 2 of 3
+    step 2 of 3 // say hello to the world again
     Hello (again) MDRB!
-    step: 3 of 3
+    step 3 of 3 // log a final message to standard error
     heeeeey! this will be printed to stderr :)
   `;
 
