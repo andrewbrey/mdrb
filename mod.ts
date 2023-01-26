@@ -65,14 +65,18 @@ if (import.meta.main) {
         maybeDaxImport = `import { $ } from "https://deno.land/x/${daxImportVersion}/mod.ts";\n`;
       }
 
+      const nfmt = new Intl.NumberFormat();
+
       switch (executionMode) {
         case "isolated": {
           for await (const [strIdx, block] of Object.entries(codeBlocks)) {
             const idx = parseInt(strIdx);
-            const prettyIdx = idx + 1;
-            const blockCount = codeBlocks.length;
+            const prettyIdx = nfmt.format(idx + 1);
+            const blockCount = nfmt.format(codeBlocks.length);
 
-            $.logStep("step:", prettyIdx, "of", blockCount);
+            let stepName = `step ${prettyIdx} of ${blockCount}`;
+            if (block.summary) stepName += ` // ${block.summary}`;
+            $.log(colors.dim(stepName));
 
             const encoded = asDataURI([maybeDaxImport, block.code]);
 
@@ -89,25 +93,30 @@ if (import.meta.main) {
         default: {
           for await (const [strIdx, block] of Object.entries(codeBlocks)) {
             const idx = parseInt(strIdx);
-            const prettyIdx = idx + 1;
+            const prettyIdx = nfmt.format(idx + 1);
+            const prettyNextIdx = nfmt.format(idx + 2);
             const blockCount = codeBlocks.length;
+            const prettyBlockCount = nfmt.format(blockCount);
 
-            $.logStep("step:", prettyIdx, "of", blockCount);
+            let stepName = `step ${prettyIdx} of ${prettyBlockCount}`;
+            if (block.summary) stepName += ` // ${block.summary}`;
+            $.log(colors.dim(stepName));
 
             const encoded = asDataURI([maybeDaxImport, block.code]);
 
             await $.raw`deno eval 'await import("${encoded}")'`;
 
             if (idx < blockCount - 1) {
-              const proceed = await $.confirm(`Proceed to step ${prettyIdx + 1}?`, {
+              const proceed = await $.confirm(`\nProceed to step ${prettyNextIdx}?`, {
                 default: true,
               });
 
               if (!proceed) {
                 const stepsLeft = blockCount - idx - 1;
-                const msg = stepsLeft > 1 ? `remaining ${stepsLeft} steps` : "last step";
+                const msg = stepsLeft > 1 ? `remaining ${colors.blue(`${stepsLeft}`)} steps` : "last step";
 
-                $.logWarn("skipping", msg);
+                $.log("");
+                $.logWarn("skipped", msg);
 
                 break;
               }

@@ -15,7 +15,7 @@ This is a sample markdown file which contains several types of content, includin
 > Hey look, a blockquote just before our first code block!
 
 <details data-mdrb>
-<summary>step 1: say hello to the world</summary>
+<summary>say hello to the world</summary>
 
 <pre>
 description = '''
@@ -46,7 +46,7 @@ echo "I am not going to be run by mdrb, but I don't mind"
 Here we have a second fenced code block tagged with a supported language.
 
 <details data-mdrb>
-<summary>step 2: say hello to the world (again)</summary>
+<summary>say hello to the world again</summary>
 
 <pre>
 description = '''
@@ -83,7 +83,7 @@ which means your fenced code blocks have access to a _magic_ `$` variable that i
 module - super handy!
 
 <details data-mdrb>
-<summary>step 3: log a final message to standard error</summary>
+<summary>log a final message to standard error</summary>
 
 <pre>
 description = '''
