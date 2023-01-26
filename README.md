@@ -115,6 +115,98 @@ mdrb https://deno.land/mdrb/demo.md
 
 <img src=".github/usage-no-dax.gif" alt="demonstration of the fact that you can pass dax equals false to the mdrb command line and the dollar object will not be added">
 
+### Step Configuration
+
+It is possible to (_optionally_) configure your code blocks using an HTML `<details>` element which comes immediately
+before your code blocks. Each `ts / js` fenced code block can have its own configuration (though one is not required).
+The contents of your code block configuration can change aspects of how `mdrb` will execute.
+
+By providing configuration within a preceding `<details>` element, most places where Markdown is rendered will display
+the configuration information natively as a collapsed dropdown.
+
+For now, the only configuration which is used is a value which specifies a "step name / title", and this is provided as
+the `<summary>` element directly inside of the `<details>`.
+
+#### Configuration Notes
+
+Here is an example of a valid, and configured, step:
+
+````md
+> ... preceding Markdown content
+
+<details data-mdrb>
+<summary>Log a diagnostic message</summary>
+</details>
+
+```ts
+console.log("hello from this configured step!");
+```
+
+> ... the rest of the Markdown
+````
+
+Please note the following:
+
+- The `<details>` element has an attribute of `data-mdrb`, which is required to signal to `mdrb` that this `<details>`
+  is meant to configure a code block
+- The `<summary>` element is nested inside of the `<details>` element
+
+With this configuration in place, when executed this Markdown will show (with the first line dimmed in your terminal):
+
+```
+step 1 of 1 // Log a diagnostic message
+hello from this configured step!
+```
+
+##### Future Configuration
+
+The configuration syntax also supports an additional feature, which is `TOML` formatted configuration placed inside of a
+`<pre>` element below the `<summary>` element.
+
+> **WARNING** the `<pre>` _must have_ a newline before it (a blank line between the `<summary>` and the `<pre>`) and its
+> content _must not be_ indented (otherwise the Markdown parser will classify the content as an "indented code block"
+> which is another feature of Markdown)
+
+Here is an example of a "full" configuration:
+
+````md
+> ... preceding Markdown content
+
+<details data-mdrb>
+<summary>Log a diagnostic message</summary>
+
+<pre>
+description = '''
+basic demonstration of the fact that
+you can log to the console with code
+blocks.
+'''
+</pre>
+</details>
+
+```ts
+console.log("hello from this configured step!");
+```
+
+> ... the rest of the Markdown
+````
+
+Beyond the previous things to notice, here's a couple more things to notice:
+
+- The `<pre>` has a blank line before it separating it from the `<summary>`
+- The text content of the `<pre>` is not indented _at all_ and is valid `TOML`
+- This example has a single key-value pair, showing the ability to use multiline `TOML` strings
+
+Today, nothing is done with anything placed inside of the `<pre>`, even if it's well defined according to these rules,
+however in the future, there may be additions to the way you can configure `mdrb` execution exposed through these
+configuration values.
+
+Some possible examples of things which may be included are:
+
+- Skip the automatic addition of `dax` for a given code block
+- Conditionally skip a code block entirely (say, for instance, if you were on Windows or Mac but not on Linux)
+- Your ideas? Make an issue or PR and it will be considered
+
 ## Prior Art
 
 - https://github.com/jacobdeichert/mask
