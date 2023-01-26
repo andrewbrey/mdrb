@@ -10,6 +10,20 @@ const t$ = $.build$({
     .noThrow(true).env({ NO_COLOR: "true" }).timeout(10_000),
 });
 
+const makeDetails = (opts?: { summary?: string; desc?: string }) => {
+  const details = $.dedent`
+    <details data-mdrb>
+    ${opts?.summary ? `<summary>${opts.summary}</summary>` : ""}
+
+    <pre>
+    description = "${opts?.desc ?? ""}"
+    </pre>
+    </details>
+  `;
+
+  return details;
+};
+
 // Adapted from https://github.com/dsherret/dax/blob/77c2e708d1c14e4afc657f0affa38a450ff35607/src/request.test.ts#L5
 function withServer(action: (serverUrl: URL) => Promise<void>) {
   const controller = new AbortController();
@@ -174,4 +188,38 @@ Deno.test("single mode throws if blocks are incompatible", async () => {
 
     await t$`deno run -A --unstable ${mod} --mode=single`.stdinText(md).noThrow(false);
   });
+});
+
+Deno.test("summary is printed if one is available", async () => {
+  const summary = "this is the step name";
+
+  const md = $.dedent`
+    ${makeDetails({ summary })}
+    
+    ~~~ts
+    console.log("$ is", typeof $);
+    ~~~
+  `;
+
+  const { combined } = await t$`deno run -A ${mod}`
+    .stdinText(md);
+
+  assertStringIncludes(combined, `step 1 of 1 // ${summary}`);
+});
+
+Deno.test("summary is not printed if one is not available", async () => {
+  const summary = "";
+
+  const md = $.dedent`
+    ${makeDetails({ summary })}
+    
+    ~~~ts
+    console.log("$ is", typeof $);
+    ~~~
+  `;
+
+  const { stderr } = await t$`deno run -A ${mod}`
+    .captureCombined(false).stdinText(md);
+
+  assertEquals(stderr.trim(), "step 1 of 1");
 });
