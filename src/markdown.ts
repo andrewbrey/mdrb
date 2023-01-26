@@ -34,23 +34,23 @@ export function mdCodeBlocks(mdContent: string, mdFileUrl: string) {
         config: {},
       };
 
-      let cursor = idx + 1;
-      let cursorToken = mdTokens.at(cursor);
-      while (cursorToken && cursorToken.type === "text") {
-        block.code += cursorToken.content;
-        cursor++;
-        cursorToken = mdTokens.at(cursor);
+      let codeCursor = idx + 1;
+      let codeCursorToken = mdTokens.at(codeCursor);
+      while (codeCursorToken && codeCursorToken.type === "text") {
+        block.code += codeCursorToken.content;
+        codeCursor++;
+        codeCursorToken = mdTokens.at(codeCursor);
       }
 
       if (!block.code.trim().length) return;
 
-      cursor++;
-      cursorToken = mdTokens.at(cursor);
+      let configCursor = idx - 1;
+      let configCursorToken = mdTokens.at(configCursor);
       let blockConfig = "";
-      while (cursorToken && cursorToken.type === "html") {
-        blockConfig += cursorToken.content;
-        cursor++;
-        cursorToken = mdTokens.at(cursor);
+      while (configCursorToken && configCursor >= 0 && configCursorToken.type === "html") {
+        blockConfig = `${configCursorToken.content}${blockConfig}`;
+        configCursor--;
+        configCursorToken = mdTokens.at(configCursor);
       }
 
       // ode to the ol' jquery naming conventions :)
@@ -58,7 +58,9 @@ export function mdCodeBlocks(mdContent: string, mdFileUrl: string) {
       const $details = $blockConfig("details[data-mdrb]");
       const $summary = $blockConfig("summary", $details);
       const $pre = $blockConfig("pre", $details);
-      const details = ($pre.text() ?? "").trim();
+      const details = $.dedent`
+        ${$pre.text() ?? ""}
+      `;
 
       block.summary = ($summary.text() ?? "").trim();
       block.config = details ? $.parseTOML(details) : {};
