@@ -2,19 +2,30 @@
 
 import { gt } from "../deps.dev.ts";
 import { $, colors } from "../deps.ts";
+import { daxVersion, version } from "../mod.ts";
 
 const root = $.relativePath(import.meta.url, "..");
 
 const latestTag = await $`git describe --tags --abbrev=0`.cwd(root).text();
-const nextVersion = await Deno.readTextFile($.path.join(root, "VERSION"));
+const depsDaxVersion = Deno.readTextFileSync($.path.join(root, "deps.ts"))
+	.match(/deno.land\/x\/dax@([^\/]+)/)?.at(1) ?? "";
 
-const nextIsNewer = gt(nextVersion, latestTag);
-
+const nextIsNewer = gt(version, latestTag);
 if (!nextIsNewer) {
 	throw new Error($.dedent`
-		${colors.red(`VERSION is out of date`)}
+		${colors.red(`mod.ts version is out of date`)}
 
-		Latest git tag is ${colors.yellow(latestTag)} and VERSION is set to ${colors.blue(nextVersion)}
+		Latest git tag is ${colors.yellow(latestTag)} and mod.ts "version" is set to ${colors.blue(version)}
 
 	`);
+}
+
+const daxVersionCorrect = depsDaxVersion === daxVersion;
+if (!daxVersionCorrect) {
+	throw new Error($.dedent`
+		${colors.red(`mod.ts daxVersion is out of date`)}
+
+		Version declared in dep.ts is ${colors.yellow(depsDaxVersion)} and mod.ts "daxVersion" is set to ${
+		colors.blue(daxVersion)
+	}`);
 }

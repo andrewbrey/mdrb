@@ -2,13 +2,16 @@ import { $, colors, Command, EnumType, readAll, ValidationError } from "./deps.t
 import { mdCodeBlocks } from "./src/markdown.ts";
 import { invariant, toFileURL } from "./src/util.ts";
 
+export const version = "1.2.2";
+export const daxVersion = "0.24.1";
+
 if (import.meta.main) {
 	const modes = ["runbook", "isolated", "single"] as const;
 	type Mode = typeof modes[number];
 
 	await new Command()
 		.name("mdrb")
-		.version(Deno.readTextFileSync($.relativePath(import.meta.url, "VERSION")).trim())
+		.version(version)
 		.description($.dedent`
       .${colors.bold("MD")} ${colors.bold("R")}un ${colors.bold("B")}ook
 
@@ -57,12 +60,7 @@ if (import.meta.main) {
 
 			let maybeDaxImport = "";
 			if (dax) {
-				const daxDepsVersion = Deno.readTextFileSync($.relativePath(import.meta.url, "deps.ts"))
-					.match(/deno.land\/x\/dax@([^\/]+)/)?.at(1) ?? "";
-
-				const daxImportVersion = daxDepsVersion ? `dax@${daxDepsVersion}` : "dax";
-
-				maybeDaxImport = `import { $ } from "https://deno.land/x/${daxImportVersion}/mod.ts";\n`;
+				maybeDaxImport = `import { $ } from "https://deno.land/x/dax@${daxVersion}/mod.ts";\n`;
 			}
 
 			const nfmt = new Intl.NumberFormat();
