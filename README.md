@@ -85,7 +85,7 @@ deno install -Arfn mdrb https://deno.land/x/mdrb/mod.ts
 🧪 Try it yourself with:
 
 ```sh
-mdrb https://deno.land/mdrb/demo.md
+mdrb https://deno.land/x/mdrb/demo.md
 ```
 
 <img src=".github/usage-remote.gif" alt="demonstration of using mdrb to execute the demo markdown file referenced by its URL">
