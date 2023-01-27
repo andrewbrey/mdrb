@@ -1,21 +1,21 @@
 <h1 align="center">
-  <br>
-    <img src=".github/logo.png" height="150px" alt="mdrb logo which consists of underlined text spelling out a period followed by the letters m, d, r, and b">
-  <br>
-  Markdown Run Book
-  <br>
-  <br>
+	<br>
+		<img src=".github/logo.png" style="aspect-ratio: 1681 / 460; max-width: 500px;" alt="mdrb logo which consists of underlined text spelling out a period followed by the letters m, d, r, and b as well as a small cartoon dinosaur sitting at a computer">
+	<br>
+	Markdown Run Book
+	<br>
+	<br>
 </h1>
 
 <p align="center">Turn your Markdown documentation into executable runbooks.</p>
 
 <p align="center">
-  <a href="https://github.com/andrewbrey/mdrb/actions/workflows/ci.yml">
-    <img src="https://github.com/andrewbrey/mdrb/workflows/ci/badge.svg" alt="github actions status badge">
-  </a>
-  <a href="https://deno.land/x/mdrb">
-    <img src="https://img.shields.io/badge/deno.land/x/mdrb-success?logo=deno&logoColor=black&labelColor=white&color=black" alt="deno third-party module badge">
-  </a>
+	<a href="https://github.com/andrewbrey/mdrb/actions/workflows/ci.yml">
+		<img src="https://github.com/andrewbrey/mdrb/workflows/ci/badge.svg" alt="github actions status badge">
+	</a>
+	<a href="https://deno.land/x/mdrb">
+		<img src="https://img.shields.io/badge/deno.land/x/mdrb-success?logo=deno&logoColor=black&labelColor=white&color=black" alt="deno third-party module badge">
+	</a>
 </p>
 
 ---

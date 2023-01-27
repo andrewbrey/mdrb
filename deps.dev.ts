@@ -1,10 +1,10 @@
 export { serve } from "https://deno.land/std@0.174.0/http/server.ts";
 export { gt } from "https://deno.land/std@0.174.0/semver/mod.ts";
 export {
-  assert,
-  assertEquals,
-  assertInstanceOf,
-  assertRejects,
-  assertStringIncludes,
-  assertThrows,
+	assert,
+	assertEquals,
+	assertInstanceOf,
+	assertRejects,
+	assertStringIncludes,
+	assertThrows,
 } from "https://deno.land/std@0.174.0/testing/asserts.ts";

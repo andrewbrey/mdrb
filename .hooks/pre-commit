@@ -11,10 +11,10 @@ const nextVersion = await Deno.readTextFile($.path.join(root, "VERSION"));
 const nextIsNewer = gt(nextVersion, latestTag);
 
 if (!nextIsNewer) {
-  throw new Error($.dedent`
-    ${colors.red(`VERSION is out of date`)}
+	throw new Error($.dedent`
+		${colors.red(`VERSION is out of date`)}
 
-    Latest git tag is ${colors.yellow(latestTag)} and VERSION is set to ${colors.blue(nextVersion)}
+		Latest git tag is ${colors.yellow(latestTag)} and VERSION is set to ${colors.blue(nextVersion)}
 
-  `);
+	`);
 }

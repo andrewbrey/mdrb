@@ -9,17 +9,17 @@ export { Command, EnumType, ValidationError } from "https://deno.land/x/cliffy@v
 export { CommandBuilder };
 
 export const $ = build$({
-  extras: {
-    /** Get the dirname for a specified `import.meta.url` */
-    dirname(importMetaURL: string) {
-      return basic$.path.dirname(basic$.path.fromFileUrl(importMetaURL));
-    },
-    parseHTML,
-    parseMarkdown,
-    parseTOML,
-    /** Compute a path relative to a specified `import.meta.url` */
-    relativePath(importMetaURL: string, ...segments: string[]) {
-      return basic$.path.join(this.dirname(importMetaURL), ...segments);
-    },
-  },
+	extras: {
+		/** Get the dirname for a specified `import.meta.url` */
+		dirname(importMetaURL: string) {
+			return basic$.path.dirname(basic$.path.fromFileUrl(importMetaURL));
+		},
+		parseHTML,
+		parseMarkdown,
+		parseTOML,
+		/** Compute a path relative to a specified `import.meta.url` */
+		relativePath(importMetaURL: string, ...segments: string[]) {
+			return basic$.path.join(this.dirname(importMetaURL), ...segments);
+		},
+	},
 });
