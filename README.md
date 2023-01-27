@@ -68,7 +68,7 @@ deno install -Arfn mdrb https://deno.land/x/mdrb/mod.ts
 > specify alternate permissions, e.g. `deno install --allow-net -rfn mdrb https://deno.land/x/mdrb/mod.ts` but be aware
 > that this means you will be prompted for permissions at runtime.
 
-## Demo
+## Demos
 
 ### Local Markdown
 
@@ -76,7 +76,7 @@ deno install -Arfn mdrb https://deno.land/x/mdrb/mod.ts
 > executing the 3 included (`ts/js`) code blocks as a "runbook", pausing execution after each step awaiting user
 > confirmation to proceed.
 
-<img src=".github/usage-basic.gif" alt="demonstration of using mdrb to execute the demo markdown file included in the source repository">
+<img src=".github/demos/usage-basic.gif" alt="demonstration of using mdrb to execute the demo markdown file included in the source repository">
 
 ### Remote Markdown
 
@@ -88,7 +88,7 @@ deno install -Arfn mdrb https://deno.land/x/mdrb/mod.ts
 mdrb https://deno.land/x/mdrb/demo.md
 ```
 
-<img src=".github/usage-remote.gif" alt="demonstration of using mdrb to execute the demo markdown file referenced by its URL">
+<img src=".github/demos/usage-remote.gif" alt="demonstration of using mdrb to execute the demo markdown file referenced by its URL">
 
 > Note that in this demo, we used "`isolated`" mode instead of the default "`runbook`" mode which omits the pauses for
 > confirmation between code blocks
@@ -97,7 +97,7 @@ mdrb https://deno.land/x/mdrb/demo.md
 
 > We can also pipe the Markdown content to `mdrb`
 
-<img src=".github/usage-remote-pipe.gif" alt="demonstration of using mdrb to execute the demo markdown file referenced by its URL and piping the content via standard input">
+<img src=".github/demos/usage-remote-pipe.gif" alt="demonstration of using mdrb to execute the demo markdown file referenced by its URL and piping the content via standard input">
 
 > Note that for this demo, even though we didn't manually specify "`isolated`" mode, `mdrb` used it instead of the
 > normal default of "`runbook`" mode because the prompts will fail if we don't have a `tty`
@@ -107,13 +107,13 @@ mdrb https://deno.land/x/mdrb/demo.md
 > There are a **ton** of useful things you can do with `dax`, so here's a little showcase of _some_ of what you can do
 > with the automatically added `$` object.
 
-<img src=".github/usage-dax.gif" alt="demonstration of using the automatically included dollar object within markdown code blocks">
+<img src=".github/demos/usage-dax.gif" alt="demonstration of using the automatically included dollar object within markdown code blocks">
 
 ### Skipping automatic `dax` addition
 
 > If you don't want `dax` to be automatically added to your code blocks, you can pass the `--dax=false` option
 
-<img src=".github/usage-no-dax.gif" alt="demonstration of the fact that you can pass dax equals false to the mdrb command line and the dollar object will not be added">
+<img src=".github/demos/usage-no-dax.gif" alt="demonstration of the fact that you can pass dax equals false to the mdrb command line and the dollar object will not be added">
 
 ### Step Configuration
 
