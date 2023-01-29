@@ -2,7 +2,7 @@ import { $, colors, Command, EnumType, readAll, ValidationError } from "./deps.t
 import { type CodeBlock, mdCodeBlocks, renderMDToString } from "./src/markdown.ts";
 import { invariant, toFileURL } from "./src/util.ts";
 
-export const version = "1.3.1";
+export const version = "1.3.2";
 export const daxVersion = "0.24.1";
 
 if (import.meta.main) {
