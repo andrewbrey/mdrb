@@ -52,7 +52,7 @@ Deno.test("mdCodeBlocks works for windows", () => {
 	}
 });
 
-Deno.test("mdCodeBlocks works for multiple blocks", () => {
+Deno.test("mdCodeBlocks works for multiple blocks and block idx is accurate", () => {
 	const url = "file://a/b/c.ts";
 
 	for (const ext of "ts|typescript|js|javascript".split("|")) {
@@ -77,8 +77,12 @@ Deno.test("mdCodeBlocks works for multiple blocks", () => {
 
 		assertEquals(blocks.length, 3);
 		for (const idx of [1, 2, 3]) {
+			const blockIdx = idx - 1;
+			const block = blocks.at(blockIdx);
+
+			assertEquals(block?.idx, blockIdx);
 			assertEquals(
-				blocks.at(idx - 1)?.code,
+				block?.code,
 				$.dedent`
 					import mod from "file://a/b/mod.ts";
 					console.log("hello world${idx}");\n
@@ -108,7 +112,7 @@ Deno.test("mdCodeBlocks ignores blocks for other languages", () => {
 	}
 });
 
-Deno.test("mdCodeBlocks works for tilde blocks", () => {
+Deno.test("mdCodeBlocks works for tilde blocks and block idx works", () => {
 	const url = "file://a/b/c.ts";
 
 	for (const ext of "ts|typescript|js|javascript".split("|")) {
@@ -122,6 +126,7 @@ Deno.test("mdCodeBlocks works for tilde blocks", () => {
 		const blocks = mdCodeBlocks(code, url);
 
 		assertEquals(blocks.length, 1);
+		assertEquals(blocks.at(0)?.idx, 0);
 		assertEquals(
 			blocks.at(0)?.code,
 			$.dedent`

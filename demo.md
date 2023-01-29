@@ -51,9 +51,9 @@ Here we have a second fenced code block tagged with a supported language.
 <pre>
 description = '''
 another logging demo; beware that in this
-block, "re-declare" `message` (safe in both)
+block, we "re-declare" `message` (safe in both
 "runbook" mode and "isolated" mode, but not in
-"single" mode.
+"single" mode).
 '''
 </pre>
 </details>

@@ -1,9 +1,10 @@
-import { $ } from "../deps.ts";
+import { $, colors, DefaultTheme, type Extension, renderMarkdown, Typescript } from "../deps.ts";
 
-type CodeBlock = {
+export type CodeBlock = {
+	idx: number;
 	code: string;
 	summary: string;
-	config: Record<string, unknown>;
+	config: Record<string, unknown> & { description?: string };
 };
 
 /**
@@ -21,6 +22,7 @@ export function mdCodeBlocks(mdContent: string, mdFileUrl: string) {
 	const supportedLanguages = ["js", "javascript", "ts", "typescript"];
 	const mdTokens = $.parseMarkdown(mdContent);
 
+	let blockIdx = 0;
 	mdTokens.forEach((mdToken, idx) => {
 		if (
 			mdToken.type === "start" &&
@@ -29,10 +31,12 @@ export function mdCodeBlocks(mdContent: string, mdFileUrl: string) {
 			supportedLanguages.includes(mdToken.language)
 		) {
 			const block: CodeBlock = {
+				idx: blockIdx,
 				code: "",
 				summary: "",
 				config: {},
 			};
+			blockIdx++;
 
 			let codeCursor = idx + 1;
 			let codeCursorToken = mdTokens.at(codeCursor);
@@ -92,4 +96,80 @@ export function fileProtocolifyLocalImports(code: string, mdFileUrl: string) {
 		relativeImportRegex,
 		(match, file) => match.replace(file, `${new URL(file, mdFileUrl)}`).replaceAll("'", '"'),
 	);
+}
+
+export function renderMDToString(mdContent: string, opts: { linePrefix?: string; lineTruncate?: boolean } = {}) {
+	if (!mdContent?.trim()) return "";
+
+	const linePrefix = opts.linePrefix ?? `  ${colors.white.bgWhite.dim(" ")}  `;
+	const lineTruncate = opts.lineTruncate ?? true;
+
+	const HighlightTS: Extension = {
+		generateNode(_generatorFn, node, _parent, _options) {
+			if (node.type === "code") {
+				let code: string = node.value || "// <empty code block>";
+				const lang = node.lang ?? "codeblock";
+
+				// Replace leading tabs with two spaces to conserve width
+				code = code.split(/\r?\n/g).map((l) => {
+					let foundNonTab = false;
+					let noLeadingTabs = "";
+					l.split("").map((c) => {
+						if (!foundNonTab && c === "\t") {
+							noLeadingTabs += "  ";
+						} else {
+							noLeadingTabs += c;
+							foundNonTab = true;
+						}
+
+						return noLeadingTabs;
+					});
+
+					return noLeadingTabs;
+				}).join("\n");
+
+				const columns = Deno.isatty(Deno.stdin.rid) ? Deno.consoleSize().columns : 80;
+				const linePrefixWidth = $.stripAnsi(linePrefix).length;
+				const maxRenderWidth = columns - linePrefixWidth;
+
+				switch (lang) {
+					case "ts":
+					case "typescript":
+					case "js":
+					case "javascript":
+					case "json":
+					case "jsonc":
+					case "json5":
+						code = new Typescript(code, DefaultTheme, { output: "console" }).highlight();
+						break;
+				}
+
+				code = code.split(/\r?\n/g)
+					.map((l) => {
+						const assumedTabSize = 8;
+						const lineNoAnsi = $.stripAnsi(l);
+						const lineTextLength = lineNoAnsi.trimEnd().length;
+						const tabsLength = lineNoAnsi.split("").filter((c) => c === "\t").length * assumedTabSize;
+						const lineRenderLength = lineTextLength + tabsLength;
+						if (lineRenderLength < maxRenderWidth) return l;
+
+						return lineTruncate ? `${l.slice(0, Math.max(0, maxRenderWidth - tabsLength))}${colors.reset("...")}` : l;
+					})
+					.join("\n");
+
+				const borderChar = " ";
+				const borderColor = colors.brightBlue.bgBlue;
+				return $.dedent`
+					${borderColor.italic(` ${lang} `)}${borderColor.dim("".padEnd(maxRenderWidth - lang.length - 2, borderChar))}
+					${code}
+					${borderColor.dim("".padEnd(maxRenderWidth, borderChar))}
+					
+				`;
+			}
+		},
+	};
+
+	return renderMarkdown(mdContent.trim(), { extensions: [HighlightTS] })
+		.trim().split(/\r?\n/g).map((l) => l.trimEnd())
+		.map((l) => `${linePrefix}${l}`).join("\n");
 }

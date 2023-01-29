@@ -76,7 +76,7 @@ deno install -Arfn mdrb https://deno.land/x/mdrb/mod.ts
 > executing the 3 included (`ts/js`) code blocks as a "runbook", pausing execution after each step awaiting user
 > confirmation to proceed.
 
-<img src=".github/demos/usage-basic.gif" alt="demonstration of using mdrb to execute the demo markdown file included in the source repository">
+<img src=".github/demos/usage-basic/demo.gif" alt="demonstration of using mdrb to execute the demo markdown file included in the source repository">
 
 ### Remote Markdown
 
@@ -88,7 +88,7 @@ deno install -Arfn mdrb https://deno.land/x/mdrb/mod.ts
 mdrb https://deno.land/x/mdrb/demo.md
 ```
 
-<img src=".github/demos/usage-remote.gif" alt="demonstration of using mdrb to execute the demo markdown file referenced by its URL">
+<img src=".github/demos/usage-remote/demo.gif" alt="demonstration of using mdrb to execute the demo markdown file referenced by its URL">
 
 > Note that in this demo, we used "`isolated`" mode instead of the default "`runbook`" mode which omits the pauses for
 > confirmation between code blocks
@@ -97,7 +97,7 @@ mdrb https://deno.land/x/mdrb/demo.md
 
 > We can also pipe the Markdown content to `mdrb`
 
-<img src=".github/demos/usage-remote-pipe.gif" alt="demonstration of using mdrb to execute the demo markdown file referenced by its URL and piping the content via standard input">
+<img src=".github/demos/usage-remote-pipe/demo.gif" alt="demonstration of using mdrb to execute the demo markdown file referenced by its URL and piping the content via standard input">
 
 > Note that for this demo, even though we didn't manually specify "`isolated`" mode, `mdrb` used it instead of the
 > normal default of "`runbook`" mode because the prompts will fail if we don't have a `tty`
@@ -107,27 +107,39 @@ mdrb https://deno.land/x/mdrb/demo.md
 > There are a **ton** of useful things you can do with `dax`, so here's a little showcase of _some_ of what you can do
 > with the automatically added `$` object.
 
-<img src=".github/demos/usage-dax.gif" alt="demonstration of using the automatically included dollar object within markdown code blocks">
+<img src=".github/demos/usage-dax/demo.gif" alt="demonstration of using the automatically included dollar object within markdown code blocks">
 
 ### Skipping automatic `dax` addition
 
 > If you don't want `dax` to be automatically added to your code blocks, you can pass the `--dax=false` option
 
-<img src=".github/demos/usage-no-dax.gif" alt="demonstration of the fact that you can pass dax equals false to the mdrb command line and the dollar object will not be added">
+<img src=".github/demos/usage-no-dax/demo.gif" alt="demonstration of the fact that you can pass dax equals false to the mdrb command line and the dollar object will not be added">
 
 ### Step Configuration
 
-It is possible to (_optionally_) configure your code blocks using an HTML `<details>` element which comes immediately
-before your code blocks. Each `ts / js` fenced code block can have its own configuration (though one is not required).
-The contents of your code block configuration can change aspects of how `mdrb` will execute.
+It is possible to (_optionally_) configure your code blocks using an HTML `<details data-mdrb>` element which comes
+immediately before your code blocks. Each `ts / js` fenced code block can have its own configuration (though one is not
+required). The contents of your code block configuration can change aspects of how `mdrb` will execute.
 
-By providing configuration within a preceding `<details>` element, most places where Markdown is rendered will display
-the configuration information natively as a collapsed dropdown.
+By providing configuration within a preceding `<details data-mdrb>` element, most places where Markdown is rendered will
+display the configuration information natively as a collapsed dropdown.
 
-For now, the only configuration which is used is a value which specifies a "step name / title", and this is provided as
-the `<summary>` element directly inside of the `<details>`.
+The configuration syntax supports two features within a `<details data-mdrb>` element:
 
-#### Configuration Notes
+- a value which specifies a "step name / title", and this is provided as the `<summary>` element directly inside of the
+  `<details data-mdrb>`.
+- a value which is [TOML](https://toml.io/) formatted configuration placed inside of a `<pre>` element below the
+  `<summary>` element.
+  > **Warning** the `<pre>` _must have_ a newline before it (a blank line between the `<summary>` and the `<pre>`) and
+  > its content _must not be_ indented (otherwise the Markdown parser will classify the content as an "indented code
+  > block" which is another feature of Markdown)
+
+If you include the `<details data-mdrb>` element for step configuration (again, it's optional), you may specify within
+it both a `<summary>` and a `<pre>`, only a `<summary>`, only a `<pre>`, or neither. Basically, everything about this
+step configuration is optional and `mdrb` will use default values in the absence of user-provided configuration
+overrides.
+
+#### Important Notes About Configuration
 
 Here is an example of a valid, and configured, step:
 
@@ -149,25 +161,17 @@ Please note the following:
 
 - The `<details>` element has an attribute of `data-mdrb`, which is required to signal to `mdrb` that this `<details>`
   is meant to configure a code block
-- The `<summary>` element is nested inside of the `<details>` element
+- The `<summary>` element is nested inside of the `<details data-mdrb>` element
 
 With this configuration in place, when executed this Markdown will show (with the first line dimmed in your terminal):
 
 ```
 step 1 of 1 // Log a diagnostic message
+
 hello from this configured step!
 ```
 
-##### Future Configuration
-
-The configuration syntax also supports an additional feature, which is `TOML` formatted configuration placed inside of a
-`<pre>` element below the `<summary>` element.
-
-> **WARNING** the `<pre>` _must have_ a newline before it (a blank line between the `<summary>` and the `<pre>`) and its
-> content _must not be_ indented (otherwise the Markdown parser will classify the content as an "indented code block"
-> which is another feature of Markdown)
-
-Here is an example of a "full" configuration:
+Here is an example of a step with a "full" configuration:
 
 ````md
 > ... preceding Markdown content
@@ -177,6 +181,10 @@ Here is an example of a "full" configuration:
 
 <pre>
 description = '''
+# important step
+
+> I can have blockquotes!
+
 basic demonstration of the fact that
 you can log to the console with code
 blocks.
@@ -191,14 +199,19 @@ console.log("hello from this configured step!");
 > ... the rest of the Markdown
 ````
 
-Beyond the previous things to notice, here's a couple more things to notice:
+In this example notice the following:
 
 - The `<pre>` has a blank line before it separating it from the `<summary>`
 - The text content of the `<pre>` is not indented _at all_ and is valid `TOML`
-- This example has a single key-value pair, showing the ability to use multiline `TOML` strings
+- This example has a single key-value pair, showing the ability to use multiline `TOML` strings as well as the fact that
+  the `description` key can contain Markdown content
 
-Today, nothing is done with anything placed inside of the `<pre>`, even if it's well defined according to these rules,
-however in the future, there may be additions to the way you can configure `mdrb` execution exposed through these
+Today, the only key from the `<pre>` which may be used when specified is the `description`. This key can have either a
+single-line value or a multi-line value, and further, the value can contain Markdown which will be beautifully rendered
+in the terminal when you use `"runbook"` mode _or_ when you use `"isolated"` mode with the `--isolated-desc=true` flag.
+
+Beyond the `description` key, no other configuration values are used, even if they are well defined according to these
+rules, however in the future, there may be additions to the way you can configure `mdrb` execution exposed through these
 configuration values.
 
 Some possible examples of things which may be included are:

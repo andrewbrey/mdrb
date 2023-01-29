@@ -1,4 +1,5 @@
-.github
+.github/**/*.gif
+.github/**/*.mp4
 *deleteme*
 
 .deno_cache/

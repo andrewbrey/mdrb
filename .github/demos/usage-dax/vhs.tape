@@ -1,4 +1,4 @@
-Output .github/demos/usage-basic.gif
+Output ./demos/demo.gif
 
 Require deno
 Require mdrb
@@ -9,26 +9,43 @@ Set FontFamily "JetBrainsMono Nerd Font"
 
 # pre-cache runtime deps
 Hide
-Type "mdrb demo.md --mode isolated"
+Type "mdrb ./demos/demo.md --mode isolated"
 Enter
-Sleep 5s
+Sleep 4s
+Enter
+Sleep 6s
 Type "clear"
 Enter
 Sleep 500ms
 Show
 
-Type "mdrb demo.md"
+Type "mdrb ./demos/demo.md"
 Enter
 Sleep 1s
 
 Type "y"
 Sleep 500ms
 Enter
-Sleep 1s
+Sleep 2s
 
 Type "y"
 Sleep 500ms
 Enter
+Sleep 2s
+
+Space
+Sleep 500ms
+Down
+Sleep 500ms
+Down
+Sleep 500ms
+Space
+Sleep 500ms
+Enter
+
 Sleep 1s
+Type "y"
+Sleep 500ms
+Enter
 
 Sleep 3s

@@ -1,4 +1,4 @@
-Output .github/demos/usage-remote.gif
+Output ./demos/demo.gif
 
 Require deno
 Require mdrb
@@ -9,7 +9,7 @@ Set FontFamily "JetBrainsMono Nerd Font"
 
 # pre-cache runtime deps
 Hide
-Type "mdrb https://deno.land/x/mdrb/demo.md --mode isolated"
+Type "curl -sSLf https://deno.land/x/mdrb/demo.md | mdrb"
 Enter
 Sleep 5s
 Type "clear"
@@ -17,6 +17,6 @@ Enter
 Sleep 500ms
 Show
 
-Type "mdrb https://deno.land/x/mdrb/demo.md --mode isolated"
+Type "curl -sSLf https://deno.land/x/mdrb/demo.md | mdrb"
 Enter
-Sleep 4s
+Sleep 5s

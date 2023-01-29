@@ -59,10 +59,15 @@ Deno.test("mdrb works with local file", async () => {
 
 	const expected = $.dedent`
 		step 1 of 3 // say hello to the world
+
 		Hello MDRB!
+
 		step 2 of 3 // say hello to the world again
+		
 		Hello (again) MDRB!
+		
 		step 3 of 3 // log a final message to standard error
+		
 		heeeeey! this will be printed to stderr :)
 	`;
 
@@ -93,10 +98,15 @@ Deno.test("mdrb works with http", async () => {
 
 		const expected = $.dedent`
 			step 1 of 3 // say hello to the world
+			
 			Hello MDRB!
+			
 			step 2 of 3 // say hello to the world again
+			
 			Hello (again) MDRB!
+			
 			step 3 of 3 // log a final message to standard error
+			
 			heeeeey! this will be printed to stderr :)
 		`;
 
@@ -120,10 +130,15 @@ Deno.test("mdrb works with stdin", async () => {
 
 	const expected = $.dedent`
 		step 1 of 3 // say hello to the world
+		
 		Hello MDRB!
+		
 		step 2 of 3 // say hello to the world again
+		
 		Hello (again) MDRB!
+		
 		step 3 of 3 // log a final message to standard error
+		
 		heeeeey! this will be printed to stderr :)
 	`;
 
@@ -138,7 +153,7 @@ Deno.test("mdrb shows error output for stdin if no text piped", async () => {
 });
 
 Deno.test(
-	"mdrb switches to 'isolated' mode from 'rubook' mode for stdin and does not wait for step confirmation",
+	"mdrb switches to 'isolated' mode from 'runbook' mode for stdin and does not wait for step confirmation",
 	async () => {
 		const timeout = 3_000;
 

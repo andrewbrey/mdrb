@@ -1,4 +1,4 @@
-Output .github/demos/usage-dax.gif
+Output ./demos/demo.gif
 
 Require deno
 Require mdrb
@@ -9,37 +9,32 @@ Set FontFamily "JetBrainsMono Nerd Font"
 
 # pre-cache runtime deps
 Hide
-Type "mdrb .github/demos/usage-dax.md --mode isolated"
+Type "mdrb ./demos/demo.md --mode isolated"
 Enter
-Sleep 4s
-Enter
-Sleep 6s
+Sleep 5s
 Type "clear"
 Enter
 Sleep 500ms
 Show
 
-Type "mdrb .github/demos/usage-dax.md"
+Type "batcat ./demos/demo.md"
 Enter
 Sleep 2s
 
+Type "mdrb ./demos/demo.md"
+Enter
+
+Sleep 1s
 Type "y"
 Sleep 500ms
+Enter
+Sleep 2s
+
+Type "mdrb ./demos/demo.md --dax=false"
 Enter
 Sleep 1s
-
-Space
-Sleep 500ms
-Down
-Sleep 500ms
-Down
-Sleep 500ms
-Space
-Sleep 500ms
-Enter
-
 Type "y"
 Sleep 500ms
 Enter
 
-Sleep 3s
+Sleep 2s

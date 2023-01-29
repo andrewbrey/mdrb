@@ -1,8 +1,8 @@
 import { $, colors, Command, EnumType, readAll, ValidationError } from "./deps.ts";
-import { mdCodeBlocks } from "./src/markdown.ts";
+import { type CodeBlock, mdCodeBlocks, renderMDToString } from "./src/markdown.ts";
 import { invariant, toFileURL } from "./src/util.ts";
 
-export const version = "1.2.5";
+export const version = "1.3.0";
 export const daxVersion = "0.24.1";
 
 if (import.meta.main) {
@@ -13,15 +13,18 @@ if (import.meta.main) {
 		.name("mdrb")
 		.version(version)
 		.description($.dedent`
-      .${colors.bold("MD")} ${colors.bold("R")}un ${colors.bold("B")}ook
+			.${colors.bold("MD")} ${colors.bold("R")}un ${colors.bold("B")}ook
 
-      Execute a markdown file with Deno
-    `)
+			Execute a markdown file with Deno
+		`)
 		.type("mode", new EnumType(modes))
-		.option("-m, --mode <mode:mode>", "execution mode", { default: "runbook" })
-		.option("-d, --dax <dax:boolean>", "inject dax", { default: true })
+		.option("--mode <mode:mode>", "execution mode", { default: "runbook" })
+		.option("--dax <dax:boolean>", "inject the dax $ object", { default: true })
+		.option("--isolated-desc <isolatedDesc:boolean>", "show block descriptions (if available) in 'isolated' mode", {
+			default: false,
+		})
 		.arguments("[file]")
-		.action(async ({ mode, dax }, file = "") => {
+		.action(async ({ mode, dax, isolatedDesc }, file = "") => {
 			let executionMode: Mode = mode as Mode;
 			let mdContent;
 			let mdFileUrl;
@@ -63,21 +66,22 @@ if (import.meta.main) {
 				maybeDaxImport = `import { $ } from "https://deno.land/x/dax@${daxVersion}/mod.ts";\n`;
 			}
 
-			const nfmt = new Intl.NumberFormat();
-
 			switch (executionMode) {
 				case "isolated": {
-					for await (const [strIdx, block] of Object.entries(codeBlocks)) {
-						const idx = parseInt(strIdx);
-						const prettyIdx = nfmt.format(idx + 1);
-						const blockCount = nfmt.format(codeBlocks.length);
+					for await (const block of codeBlocks) {
+						const ctx = blockContext(block, codeBlocks);
 
-						let stepName = `step ${prettyIdx} of ${blockCount}`;
-						if (block.summary) stepName += ` // ${block.summary}`;
-						$.log(colors.dim(stepName));
+						if (!ctx.isFirst) $.log("");
+						$.log(colors.dim(ctx.stepName));
+						if (isolatedDesc) {
+							if (ctx.description) $.log(ctx.description);
+						} else {
+							$.log("");
+						}
 
 						const encoded = asDataURI([maybeDaxImport, block.code]);
 
+						if (isolatedDesc) $.log("");
 						await $.raw`deno eval 'await import("${encoded}")'`;
 					}
 					break;
@@ -89,36 +93,32 @@ if (import.meta.main) {
 					break;
 				}
 				default: {
-					for await (const [strIdx, block] of Object.entries(codeBlocks)) {
-						const idx = parseInt(strIdx);
-						const prettyIdx = nfmt.format(idx + 1);
-						const prettyNextIdx = nfmt.format(idx + 2);
-						const blockCount = codeBlocks.length;
-						const prettyBlockCount = nfmt.format(blockCount);
+					for await (const block of codeBlocks) {
+						const ctx = blockContext(block, codeBlocks);
 
-						let stepName = `step ${prettyIdx} of ${prettyBlockCount}`;
-						if (block.summary) stepName += ` // ${block.summary}`;
-						$.log(colors.dim(stepName));
+						if (!ctx.isFirst) $.log("");
+						$.log(colors.dim(ctx.stepName));
+						if (ctx.description) $.log(ctx.description);
+
+						const proceed = await $.confirm(`${colors.reset("\n")}execute step ${colors.green(ctx.prettyIdx)}`, {
+							default: true,
+						});
+
+						if (!proceed) {
+							const msg = ctx.remaining > 0
+								? `${colors.yellow(`${ctx.prettyRemaining}`)} steps`
+								: `${colors.yellow("1")} step`;
+
+							$.log("");
+							$.log("skipped", msg);
+
+							break;
+						}
 
 						const encoded = asDataURI([maybeDaxImport, block.code]);
 
+						$.log("");
 						await $.raw`deno eval 'await import("${encoded}")'`;
-
-						if (idx < blockCount - 1) {
-							const proceed = await $.confirm(`\nProceed to step ${prettyNextIdx}?`, {
-								default: true,
-							});
-
-							if (!proceed) {
-								const stepsLeft = blockCount - idx - 1;
-								const msg = stepsLeft > 1 ? `remaining ${colors.blue(`${stepsLeft}`)} steps` : "last step";
-
-								$.log("");
-								$.logWarn("skipped", msg);
-
-								break;
-							}
-						}
 					}
 
 					break;
@@ -140,4 +140,48 @@ function asDataURI(blocks: string[]) {
 		encodeURIComponent(blocks.join(""))
 			.replaceAll("'", "%27")
 	}`;
+}
+
+function blockContext(current: CodeBlock, all: CodeBlock[]) {
+	const { idx, summary, config } = current;
+
+	const nfmt = new Intl.NumberFormat();
+	const prettyIdx = nfmt.format(idx + 1);
+	const desc = config.description?.trim() ?? "";
+
+	const blockCount = all.length;
+	const prettyBlockCount = nfmt.format(blockCount);
+
+	const nextIdx = idx + 1;
+	const prettyNextIdx = nfmt.format(nextIdx + 1);
+	const next = all.at(nextIdx);
+	const nextDesc = next?.config?.description?.trim() ?? "";
+	const nextSummary = next?.summary.trim() ?? "";
+
+	const isFirst = idx === 0;
+	const isLast = idx >= blockCount - 1;
+	const remaining = blockCount - idx - 1;
+	const prettyRemaining = nfmt.format(remaining + 1);
+
+	let stepName = `step ${prettyIdx} of ${prettyBlockCount}`;
+	if (summary) stepName += ` // ${summary}`;
+
+	return {
+		idx,
+		prettyIdx,
+		stepName,
+		summary,
+		config,
+		description: renderMDToString(desc),
+		blockCount,
+		prettyBlockCount,
+		nextIdx,
+		prettyNextIdx,
+		nextSummary,
+		nextDescription: renderMDToString(nextDesc),
+		isFirst,
+		isLast,
+		remaining,
+		prettyRemaining,
+	};
 }
