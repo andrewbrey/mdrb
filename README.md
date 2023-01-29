@@ -208,7 +208,7 @@ In this example notice the following:
 
 Today, the only key from the `<pre>` which may be used when specified is the `description`. This key can have either a
 single-line value or a multi-line value, and further, the value can contain Markdown which will be beautifully rendered
-in the terminal when you use `"runbook"` mode _or_ when you use `"isolated"` mode with the `--isolated-desc=true` flag.
+in the terminal when you use "`runbook`" mode _or_ when you use "`isolated`" mode with the `--isolated-desc=true` flag.
 
 Beyond the `description` key, no other configuration values are used, even if they are well defined according to these
 rules, however in the future, there may be additions to the way you can configure `mdrb` execution exposed through these
