@@ -4,7 +4,7 @@
 	"tasks": {
 		"test": "deno test -A --unstable --no-check",
 		"lint": "deno check mod.ts && deno lint --unstable && deno fmt --check",
-		"deps": "deno run --allow-read=. --allow-write=. --allow-net https://deno.land/x/udd/main.ts deps.ts deps.dev.ts && deno cache --lock=deno.lock deps.ts deps.dev.ts",
+		"deps": "deno run --allow-read=. --allow-write=. --allow-net https://deno.land/x/udd/main.ts deps.ts deps.dev.ts && deno cache --reload --lock=deno.lock deps.ts deps.dev.ts",
 		"demos": "deno run -A .github/demos/generate.ts",
 		"hooks": "export GITROOT=$(git rev-parse --show-toplevel); git config core.hooksPath $GITROOT/.hooks"
 	}
