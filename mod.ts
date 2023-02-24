@@ -2,8 +2,8 @@ import { $, colors, Command, EnumType, readAll, ValidationError } from "./deps.t
 import { type CodeBlock, mdCodeBlocks, renderMDToString } from "./src/markdown.ts";
 import { invariant, toFileURL } from "./src/util.ts";
 
-export const version = "1.3.2";
-export const daxVersion = "0.24.1";
+export const version = "1.4.0";
+export const daxVersion = "0.28.0";
 
 if (import.meta.main) {
 	const modes = ["runbook", "isolated", "single"] as const;
@@ -40,7 +40,7 @@ if (import.meta.main) {
 					mdContent = await $.request(file).timeout(30_000).noThrow().text().catch(() => "");
 					mdFileUrl = toFileURL("mdrb-remote.md");
 				} else {
-					invariant(await $.exists(file), `no file exists at ${file}`, ValidationError);
+					invariant(await $.path(file).exists(), `no file exists at ${file}`, ValidationError);
 
 					mdContent = await Deno.readTextFile(await Deno.realPath(file));
 					mdFileUrl = toFileURL(file);
