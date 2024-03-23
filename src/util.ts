@@ -1,4 +1,4 @@
-import { $ } from "../deps.ts";
+import { $, POSIX_SEP, SEP } from "../deps.ts";
 
 /** Enforce that a condition is true, and narrow types based on the assertion */
 export function invariant(
@@ -20,9 +20,9 @@ export function toFileURL(path: string) {
 		.replace(/^http:\/\//, "")
 		.replace(/^file:\/\//, "");
 
-	const absolute = $.path.isAbsolute(noProtocol)
+	const absolute = $.path(noProtocol).isAbsolute()
 		? noProtocol
-		: $.path.join(Deno.cwd().replaceAll($.path.SEP, $.path.posix.sep), noProtocol);
+		: $.path(Deno.cwd().replaceAll(SEP, POSIX_SEP)).join(noProtocol);
 
-	return $.path.toFileUrl(absolute).toString();
+	return $.path(absolute).toFileUrl().toString();
 }

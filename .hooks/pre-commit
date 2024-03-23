@@ -1,16 +1,16 @@
-#!/usr/bin/env -S deno run -A --unstable
+#!/usr/bin/env -S deno run -A
 
-import { gt } from "../deps.dev.ts";
+import { greaterThan, parse } from "../deps.dev.ts";
 import { $, colors } from "../deps.ts";
 import { daxVersion, version } from "../mod.ts";
 
 const root = $.relativePath(import.meta.url, "..");
 
 const latestTag = await $`git describe --tags --abbrev=0`.cwd(root).text();
-const depsDaxVersion = Deno.readTextFileSync($.path.join(root, "deps.ts"))
+const depsDaxVersion = Deno.readTextFileSync($.path(root).join("deps.ts").toString())
 	.match(/deno.land\/x\/dax@([^\/]+)/)?.at(1) ?? "";
 
-const nextIsNewer = gt(version, latestTag);
+const nextIsNewer = greaterThan(parse(version), parse(latestTag));
 if (!nextIsNewer) {
 	throw new Error($.dedent`
 		${colors.red(`mod.ts version is out of date`)}

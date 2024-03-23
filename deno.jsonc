@@ -1,9 +1,9 @@
 {
-	"fmt": { "options": { "lineWidth": 120, "useTabs": true }, "files": { "exclude": [".deno_cache", "deno.lock"] } },
-	"lint": { "files": { "exclude": [".deno_cache", "deno.lock"] } },
+	"fmt": { "lineWidth": 120, "useTabs": true, "exclude": [".deno_cache", "deno.lock"] },
+	"lint": { "exclude": [".deno_cache", "deno.lock"] },
 	"tasks": {
-		"test": "deno test -A --unstable --no-check",
-		"lint": "deno check mod.ts && deno lint --unstable && deno fmt --check",
+		"test": "deno test -A --no-check",
+		"lint": "deno check mod.ts && deno lint && deno fmt --check",
 		"deps": "deno run --allow-read=. --allow-write=. --allow-net https://deno.land/x/udd/main.ts deps.ts deps.dev.ts && deno cache --reload --lock=deno.lock deps.ts deps.dev.ts",
 		"demos": "deno run -A .github/demos/generate.ts",
 		"hooks": "export GITROOT=$(git rev-parse --show-toplevel); git config core.hooksPath $GITROOT/.hooks"

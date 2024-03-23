@@ -1,4 +1,4 @@
-import { assertEquals, assertRejects, assertStringIncludes, serve } from "./deps.dev.ts";
+import { assertEquals, assertRejects, assertStringIncludes } from "./deps.dev.ts";
 import { $, CommandBuilder } from "./deps.ts";
 
 const mod = $.relativePath(import.meta.url, "mod.ts");
@@ -29,14 +29,7 @@ function withServer(action: (serverUrl: URL) => Promise<void>) {
 	const controller = new AbortController();
 	const signal = controller.signal;
 	return new Promise<void>((resolve, reject) => {
-		serve((request) => {
-			const url = new URL(request.url);
-			if (url.pathname === "/demo") {
-				return new Response(demoText, { status: 200 });
-			} else {
-				return new Response("", { status: 404 });
-			}
-		}, {
+		Deno.serve({
 			hostname: "localhost",
 			signal,
 			async onListen(details) {
@@ -50,12 +43,19 @@ function withServer(action: (serverUrl: URL) => Promise<void>) {
 					controller.abort();
 				}
 			},
+		}, (request) => {
+			const url = new URL(request.url);
+			if (url.pathname === "/demo") {
+				return new Response(demoText, { status: 200 });
+			} else {
+				return new Response("", { status: 404 });
+			}
 		});
 	});
 }
 
 Deno.test("mdrb works with local file", async () => {
-	const { combined } = await t$`deno run -A --unstable ${mod} ${demo}`.stdinText("");
+	const { combined } = await t$`deno run -A ${mod} ${demo}`.stdinText("");
 
 	const expected = $.dedent`
 		step 1 of 3 // say hello to the world
@@ -75,18 +75,18 @@ Deno.test("mdrb works with local file", async () => {
 });
 
 Deno.test("mdrb shows error output for local file if no file exists", async () => {
-	const { combined, code } = await t$`deno run -A --unstable ${mod} ./does-not-exist.md`.stdinText("");
+	const { combined, code } = await t$`deno run -A ${mod} ./does-not-exist.md`.stdinText("");
 
-	assertEquals(code, 1);
+	assertEquals(code, 2);
 	assertStringIncludes(combined, "no file exists at ./does-not-exist.md");
 });
 
 Deno.test("mdrb shows error output for local file if text read", async () => {
 	const file = await Deno.makeTempFile({ prefix: "mdrb-test_", suffix: ".md" });
 
-	const { combined, code } = await t$`deno run -A --unstable ${mod} ${file}`.stdinText("");
+	const { combined, code } = await t$`deno run -A ${mod} ${file}`.stdinText("");
 
-	assertEquals(code, 1);
+	assertEquals(code, 2);
 	assertStringIncludes(combined, `no code to run for ${file}`);
 });
 
@@ -94,7 +94,7 @@ Deno.test("mdrb works with http", async () => {
 	await withServer(async (serverURL) => {
 		const url = new URL("/demo", serverURL);
 
-		const { combined } = await t$`deno run -A --unstable ${mod} ${url}`.stdinText("");
+		const { combined } = await t$`deno run -A ${mod} ${url}`.stdinText("");
 
 		const expected = $.dedent`
 			step 1 of 3 // say hello to the world
@@ -118,15 +118,15 @@ Deno.test("mdrb shows error output for http if no text served", async () => {
 	await withServer(async (serverURL) => {
 		const url = new URL("/does-not-exist", serverURL);
 
-		const { combined, code } = await t$`deno run -A --unstable ${mod} ${url}`.stdinText("");
+		const { combined, code } = await t$`deno run -A ${mod} ${url}`.stdinText("");
 
-		assertEquals(code, 1);
+		assertEquals(code, 2);
 		assertStringIncludes(combined, "no code to run for http://localhost");
 	});
 });
 
 Deno.test("mdrb works with stdin", async () => {
-	const { combined } = await t$`deno run -A --unstable ${mod}`.stdinText(demoText);
+	const { combined } = await t$`deno run -A ${mod}`.stdinText(demoText);
 
 	const expected = $.dedent`
 		step 1 of 3 // say hello to the world
@@ -146,9 +146,9 @@ Deno.test("mdrb works with stdin", async () => {
 });
 
 Deno.test("mdrb shows error output for stdin if no text piped", async () => {
-	const { combined, code } = await t$`deno run -A --unstable ${mod}`.stdinText("");
+	const { combined, code } = await t$`deno run -A ${mod}`.stdinText("");
 
-	assertEquals(code, 1);
+	assertEquals(code, 2);
 	assertStringIncludes(combined, "no code to run from stdin");
 });
 
@@ -157,7 +157,7 @@ Deno.test(
 	async () => {
 		const timeout = 3_000;
 
-		await t$`deno run -A --unstable ${mod} --mode runbook`.stdinText(demoText)
+		await t$`deno run -A ${mod} --mode runbook`.stdinText(demoText)
 			.timeout(timeout).noThrow(false);
 	},
 );
@@ -169,7 +169,7 @@ Deno.test("$ is defined by default", async () => {
 		~~~
 	`;
 
-	const { combined } = await t$`deno run -A --unstable ${mod}`
+	const { combined } = await t$`deno run -A ${mod}`
 		.stdinText(md);
 
 	assertStringIncludes(combined, "$ is function");
@@ -182,7 +182,7 @@ Deno.test("$ is undefined if dax integration disabled", async () => {
 		~~~
 	`;
 
-	const { combined } = await t$`deno run -A --unstable ${mod} --dax=false`
+	const { combined } = await t$`deno run -A ${mod} --dax=false`
 		.stdinText(md);
 
 	assertStringIncludes(combined, "$ is undefined");
@@ -201,7 +201,7 @@ Deno.test("single mode throws if blocks are incompatible", async () => {
 		~~~
 	`;
 
-		await t$`deno run -A --unstable ${mod} --mode=single`.stdinText(md).noThrow(false);
+		await t$`deno run -A ${mod} --mode=single`.stdinText(md).noThrow(false);
 	});
 });
 

@@ -3,7 +3,7 @@ Output ./demos/demo.gif
 Require deno
 Require mdrb
 
-Set Theme "Gruvbox Dark"
+Set Theme "GruvboxDark"
 Set Shell bash
 Set FontFamily "JetBrainsMono Nerd Font"
 

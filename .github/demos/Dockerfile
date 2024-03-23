@@ -1,4 +1,4 @@
-FROM ghcr.io/charmbracelet/vhs:v0.2.0
+FROM ghcr.io/charmbracelet/vhs:v0.7.2-devel
 
 ARG MDRB_HASH
 

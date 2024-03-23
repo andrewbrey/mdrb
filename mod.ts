@@ -2,8 +2,8 @@ import { $, colors, Command, EnumType, readAll, ValidationError } from "./deps.t
 import { type CodeBlock, mdCodeBlocks, renderMDToString } from "./src/markdown.ts";
 import { invariant, toFileURL } from "./src/util.ts";
 
-export const version = "1.4.2";
-export const daxVersion = "0.28.0";
+export const version = "2.0.0";
+export const daxVersion = "0.39.2";
 
 if (import.meta.main) {
 	const modes = ["runbook", "isolated", "single"] as const;
@@ -29,9 +29,9 @@ if (import.meta.main) {
 			let mdContent;
 			let mdFileUrl;
 
-			const fileIsMD = [".md", ".markdown"].includes($.path.extname(file.toLowerCase()));
+			const fileIsMD = [".md", ".markdown"].includes($.path(file.toLowerCase()).extname() ?? "N/A");
 			const fileIsRemote = file.startsWith("http://") || file.startsWith("https://");
-			const stdinIsTTY = Deno.isatty(Deno.stdin.rid);
+			const stdinIsTTY = Deno.stdin.isTerminal();
 
 			if (executionMode === "runbook" && !stdinIsTTY) executionMode = "isolated";
 

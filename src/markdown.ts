@@ -128,7 +128,7 @@ export function renderMDToString(mdContent: string, opts: { linePrefix?: string;
 					return noLeadingTabs;
 				}).join("\n");
 
-				const columns = Deno.isatty(Deno.stdin.rid) ? Deno.consoleSize().columns : 80;
+				const columns = Deno.stdin.isTerminal() ? Deno.consoleSize().columns : 80;
 				const linePrefixWidth = $.stripAnsi(linePrefix).length;
 				const maxRenderWidth = columns - linePrefixWidth;
 

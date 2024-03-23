@@ -1,4 +1,4 @@
-#!/usr/bin/env -S deno run -A --unstable
+#!/usr/bin/env -S deno run -A
 
 import { $ } from "../deps.ts";
 
