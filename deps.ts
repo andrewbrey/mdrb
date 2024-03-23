@@ -1,3 +1,11 @@
+/**
+ * You can use https://deno.land/x/udd to bump deps
+ *
+ * e.g.
+ *
+ * deno run --allow-read=. --allow-write=. --allow-net https://deno.land/x/udd/main.ts deps.ts deps.dev.ts
+ */
+
 import { parse as parseTOML } from "https://deno.land/std@0.178.0/encoding/toml.ts";
 import { $ as basic$, build$, CommandBuilder } from "https://deno.land/x/dax@0.28.0/mod.ts";
 import { tokens as parseMarkdown } from "https://deno.land/x/rusty_markdown@v0.4.1/mod.ts";
