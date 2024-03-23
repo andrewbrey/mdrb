@@ -28,12 +28,21 @@ Deno.test("toFileURL works", () => {
 	const toPosix = (path: string) => path.replaceAll(SEP, POSIX_SEP);
 	let cwd = toPosix(Deno.cwd());
 
-	if (Deno.build.os === "windows") cwd = `/${cwd}`;
+	if (Deno.build.os === "windows") {
+		cwd = `/${cwd}`;
 
-	assertEquals(toFileURL("/a/b/c"), "file:///a/b/c");
-	assertEquals(toFileURL("./d/e/f"), `file://${cwd}/d/e/f`);
-	assertEquals(toFileURL("../d/e/f"), `file://${toPosix($.path(cwd).join("..").toString())}/d/e/f`);
-	assertEquals(toFileURL("file://./abc.ts"), `file://${cwd}/abc.ts`);
-	assertEquals(toFileURL("http://./def.ts"), `file://${cwd}/def.ts`);
-	assertEquals(toFileURL("https://./ghi.ts"), `file://${cwd}/ghi.ts`);
+		assertEquals(toFileURL("/a/b/c"), "file:///D:/a/b/c");
+		assertEquals(toFileURL("./d/e/f"), `file://${cwd}D:/d/e/f`);
+		assertEquals(toFileURL("../d/e/f"), `file:///D:/${toPosix($.path(cwd).join("..").toString())}/d/e/f`);
+		assertEquals(toFileURL("file://./abc.ts"), `file:///D:${cwd}/abc.ts`);
+		assertEquals(toFileURL("http://./def.ts"), `file:///D:${cwd}/def.ts`);
+		assertEquals(toFileURL("https://./ghi.ts"), `file:///D:${cwd}/ghi.ts`);
+	} else {
+		assertEquals(toFileURL("/a/b/c"), "file:///a/b/c");
+		assertEquals(toFileURL("./d/e/f"), `file://${cwd}/d/e/f`);
+		assertEquals(toFileURL("../d/e/f"), `file://${toPosix($.path(cwd).join("..").toString())}/d/e/f`);
+		assertEquals(toFileURL("file://./abc.ts"), `file://${cwd}/abc.ts`);
+		assertEquals(toFileURL("http://./def.ts"), `file://${cwd}/def.ts`);
+		assertEquals(toFileURL("https://./ghi.ts"), `file://${cwd}/ghi.ts`);
+	}
 });
