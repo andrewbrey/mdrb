@@ -1,4 +1,4 @@
-FROM ghcr.io/charmbracelet/vhs:v0.7.2-devel
+FROM ghcr.io/charmbracelet/vhs:v0.8.1-devel
 
 ARG MDRB_HASH
 
@@ -13,12 +13,8 @@ RUN apt install curl unzip bat -y \
 
 ADD . /vhs/
 
-RUN deno install -Arfn mdrb /vhs/mod.ts
+RUN deno install --global --config=/vhs/deno.jsonc -Arfn mdrb /vhs/mod.ts
 
 RUN deno cache --lock=/vhs/deno.lock /vhs/deps.ts /vhs/deps.dev.ts
 
 RUN mdrb /vhs/demo.md --mode isolated
-
-ENTRYPOINT [] # override parent layer
-
-CMD [ "/usr/bin/vhs" ]

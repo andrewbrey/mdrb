@@ -2,8 +2,8 @@ import { $, colors, Command, EnumType, readAll, ValidationError } from "./deps.t
 import { type CodeBlock, mdCodeBlocks, renderMDToString } from "./src/markdown.ts";
 import { invariant, toFileURL } from "./src/util.ts";
 
-export const version = "2.0.1";
-export const daxVersion = "0.39.2";
+export const version = "3.0.0";
+export const daxVersion = "0.42.0";
 
 if (import.meta.main) {
 	const modes = ["runbook", "isolated", "single"] as const;
@@ -63,7 +63,7 @@ if (import.meta.main) {
 
 			let maybeDaxImport = "";
 			if (dax) {
-				maybeDaxImport = `import { $ } from "https://deno.land/x/dax@${daxVersion}/mod.ts";\n`;
+				maybeDaxImport = `import { $ } from "jsr:@david/dax@${daxVersion}";\n`;
 			}
 
 			switch (executionMode) {
