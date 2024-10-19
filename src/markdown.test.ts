@@ -10,7 +10,7 @@ Deno.test("mdCodeBlocks works for posix", () => {
 	for (const ext of "ts|typescript|js|javascript".split("|")) {
 		const code = $.dedent`
 			${FENCE}${ext}
-			import mod from "./mod.ts";
+			import mod from "./add.ts";
 			console.log("hello world");
 			${FENCE}
 		`;
@@ -21,7 +21,7 @@ Deno.test("mdCodeBlocks works for posix", () => {
 		assertEquals(
 			blocks.at(0)?.code,
 			$.dedent`
-				import mod from "file://a/b/mod.ts";
+				import mod from "file://a/b/add.ts";
 				console.log("hello world");
 			`,
 		);
@@ -34,7 +34,7 @@ Deno.test("mdCodeBlocks works for windows", () => {
 	for (const ext of "ts|typescript|js|javascript".split("|")) {
 		const code = $.dedent`
 			${FENCE}${ext}
-			import mod from "./mod.ts";
+			import mod from "./add.ts";
 			console.log("hello world");
 			${FENCE}
 		`;
@@ -45,7 +45,7 @@ Deno.test("mdCodeBlocks works for windows", () => {
 		assertEquals(
 			blocks.at(0)?.code,
 			$.dedent`
-				import mod from "file:///D:/a/b/mod.ts";
+				import mod from "file:///D:/a/b/add.ts";
 				console.log("hello world");
 			`,
 		);
@@ -58,17 +58,17 @@ Deno.test("mdCodeBlocks works for multiple blocks and block idx is accurate", ()
 	for (const ext of "ts|typescript|js|javascript".split("|")) {
 		const code = $.dedent`
 			${FENCE}${ext}
-			import mod from "./mod.ts";
+			import mod from "./add.ts";
 			console.log("hello world1");
 			${FENCE}
 
 			${FENCE}${ext}
-			import mod from "./mod.ts";
+			import mod from "./add.ts";
 			console.log("hello world2");
 			${FENCE}
 
 			${FENCE}${ext}
-			import mod from "./mod.ts";
+			import mod from "./add.ts";
 			console.log("hello world3");
 			${FENCE}
 		`;
@@ -84,7 +84,7 @@ Deno.test("mdCodeBlocks works for multiple blocks and block idx is accurate", ()
 			assertEquals(
 				block?.code,
 				$.dedent`
-					import mod from "file://a/b/mod.ts";
+					import mod from "file://a/b/add.ts";
 					console.log("hello world${idx}");
 				`,
 			);
@@ -118,7 +118,7 @@ Deno.test("mdCodeBlocks works for tilde blocks and block idx works", () => {
 	for (const ext of "ts|typescript|js|javascript".split("|")) {
 		const code = $.dedent`
 			~~~${ext}
-			import mod from "./mod.ts";
+			import mod from "./add.ts";
 			console.log("hello world");
 			~~~
 		`;
@@ -130,7 +130,7 @@ Deno.test("mdCodeBlocks works for tilde blocks and block idx works", () => {
 		assertEquals(
 			blocks.at(0)?.code,
 			$.dedent`
-				import mod from "file://a/b/mod.ts";
+				import mod from "file://a/b/add.ts";
 				console.log("hello world");
 			`,
 		);

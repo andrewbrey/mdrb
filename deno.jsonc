@@ -1,6 +1,6 @@
 {
 	"name": "@andrewbrey/mdrb",
-	"version": "3.0.3",
+	"version": "3.0.4",
 	"exports": "./src/cli.ts",
 	"publish": {
 		"include": [

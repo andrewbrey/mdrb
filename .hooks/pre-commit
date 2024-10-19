@@ -19,9 +19,9 @@ const parsedGitVersion = parse(latestTag);
 const cliAndCfgMatch = equals(parsedCliVersion, parsedCfgVersion);
 if (!cliAndCfgMatch) {
 	throw new Error($.dedent`
-		${colors.red(`mod.ts version and deno.jsonc version do not match`)}
+		${colors.red(`cli.ts version and deno.jsonc version do not match`)}
 
-		Deno config "version" is ${colors.yellow(configVersion)} and mod.ts "version" is set to ${colors.blue(version)}
+		Deno config "version" is ${colors.yellow(configVersion)} and cli.ts "version" is set to ${colors.blue(version)}
 
 	`);
 }
@@ -29,9 +29,9 @@ if (!cliAndCfgMatch) {
 const nextIsNewer = greaterThan(parsedCliVersion, parsedGitVersion);
 if (!nextIsNewer) {
 	throw new Error($.dedent`
-		${colors.red(`mod.ts version is out of date`)}
+		${colors.red(`cli.ts version is out of date`)}
 
-		Latest git tag is ${colors.yellow(latestTag)} and mod.ts "version" is set to ${colors.blue(version)}
+		Latest git tag is ${colors.yellow(latestTag)} and cli.ts "version" is set to ${colors.blue(version)}
 
 	`);
 }
@@ -39,9 +39,9 @@ if (!nextIsNewer) {
 const daxVersionCorrect = depsDaxVersion === daxVersion;
 if (!daxVersionCorrect) {
 	throw new Error($.dedent`
-		${colors.red(`mod.ts daxVersion is out of date`)}
+		${colors.red(`cli.ts daxVersion is out of date`)}
 
-		Version declared in dep.ts is ${colors.yellow(depsDaxVersion)} and mod.ts "daxVersion" is set to ${
+		Version declared in dep.ts is ${colors.yellow(depsDaxVersion)} and cli.ts "daxVersion" is set to ${
 		colors.blue(daxVersion)
 	}`);
 }
