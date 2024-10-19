@@ -14,7 +14,7 @@
 		<img src="https://github.com/andrewbrey/mdrb/workflows/ci/badge.svg" alt="github actions status badge">
 	</a>
 	<a href="https://jsr.io/@andrewbrey/mdrb">
-		<img src="https://jsr.io/badges/@andrewbrey/mdrb">
+		<img src="https://jsr.io/badges/@andrewbrey/mdrb" alt="jsr status badge" />
 	</a>
 </p>
 
