@@ -11,8 +11,6 @@ export { type Extension, renderMarkdown } from "@littletof/charmd";
 export { readAll } from "@std/io";
 export { SEPARATOR as SEP } from "@std/path";
 export { SEPARATOR as POSIX_SEP } from "@std/path/posix";
-export { DefaultTheme } from "@x/hue/theme";
-export { default as Typescript } from "@x/hue/typescript";
 export { CommandBuilder };
 
 export const $ = build$({

@@ -1,4 +1,4 @@
-import { $, colors, DefaultTheme, type Extension, renderMarkdown, Typescript } from "../deps.ts";
+import { $, colors, type Extension, renderMarkdown } from "../deps.ts";
 
 export type CodeBlock = {
 	idx: number;
@@ -140,7 +140,8 @@ export function renderMDToString(mdContent: string, opts: { linePrefix?: string;
 					case "json":
 					case "jsonc":
 					case "json5":
-						code = new Typescript(code, DefaultTheme, { output: "console" }).highlight();
+						// TODO: restore code highlighting for typescript here
+						// code = new Typescript(code, DefaultTheme, { output: "console" }).highlight();
 						break;
 				}
 
