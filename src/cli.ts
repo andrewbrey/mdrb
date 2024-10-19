@@ -2,10 +2,10 @@ import { $, colors, Command, EnumType, readAll, ValidationError } from "./deps.t
 import { type CodeBlock, mdCodeBlocks, renderMDToString } from "./markdown.ts";
 import { invariant, toFileURL } from "./util.ts";
 
-/* Current version of MDRB */
-export const version = "3.0.2";
+/** Current version of MDRB */
+export const version = "3.0.3";
 
-/* Bundled version of `@david/dax` */
+/** Bundled version of `@david/dax` */
 export const daxVersion = "0.42.0";
 
 if (import.meta.main) {
