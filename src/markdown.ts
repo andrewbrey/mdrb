@@ -23,38 +23,28 @@ export function mdCodeBlocks(mdContent: string, mdFileUrl: string) {
 	const mdTokens = $.parseMarkdown(mdContent);
 
 	let blockIdx = 0;
-	mdTokens.forEach((mdToken, idx) => {
+	mdTokens.children?.forEach((mdToken, idx) => {
 		if (
-			mdToken.type === "start" &&
-			mdToken.tag === "codeBlock" &&
-			mdToken.kind === "fenced" &&
-			supportedLanguages.includes(mdToken.language)
+			mdToken.type === "code" &&
+			supportedLanguages.includes(mdToken.lang)
 		) {
 			const block: CodeBlock = {
 				idx: blockIdx,
-				code: "",
+				code: mdToken.value.trim(),
 				summary: "",
 				config: {},
 			};
 			blockIdx++;
 
-			let codeCursor = idx + 1;
-			let codeCursorToken = mdTokens.at(codeCursor);
-			while (codeCursorToken && codeCursorToken.type === "text") {
-				block.code += codeCursorToken.content;
-				codeCursor++;
-				codeCursorToken = mdTokens.at(codeCursor);
-			}
-
-			if (!block.code.trim().length) return;
+			if (!block.code.length) return;
 
 			let configCursor = idx - 1;
-			let configCursorToken = mdTokens.at(configCursor);
+			let configCursorToken = mdTokens.children?.at(configCursor);
 			let blockConfig = "";
 			while (configCursorToken && configCursor >= 0 && configCursorToken.type === "html") {
-				blockConfig = `${configCursorToken.content}${blockConfig}`;
+				blockConfig = `${configCursorToken.value}${blockConfig}`;
 				configCursor--;
-				configCursorToken = mdTokens.at(configCursor);
+				configCursorToken = mdTokens.children?.at(configCursor);
 			}
 
 			// ode to the ol' jquery naming conventions :)

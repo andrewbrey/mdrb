@@ -2,8 +2,8 @@
 
 import { $ as basic$, build$, CommandBuilder } from "@david/dax";
 import { load as parseHTML } from "@esm.sh/cheerio";
+import { toAst as parseMarkdown } from "@littletof/charmd";
 import { parse as parseTOML } from "@std/toml";
-import { tokens as parseMarkdown } from "@x/rusty_markdown";
 
 export { colors } from "@cliffy/ansi/colors";
 export { Command, EnumType, ValidationError } from "@cliffy/command";

@@ -27,6 +27,6 @@ $.log("your faves are:", faves);
 </details>
 
 ```ts
-const thisDir = $.path.dirname($.path.fromFileUrl(import.meta.url));
+const thisDir = $.path(import.meta.url).dirname();
 await $`ls ${thisDir}`.printCommand(true);
 ```

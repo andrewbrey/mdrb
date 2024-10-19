@@ -22,7 +22,7 @@ Deno.test("mdCodeBlocks works for posix", () => {
 			blocks.at(0)?.code,
 			$.dedent`
 				import mod from "file://a/b/mod.ts";
-				console.log("hello world");\n
+				console.log("hello world");
 			`,
 		);
 	}
@@ -46,7 +46,7 @@ Deno.test("mdCodeBlocks works for windows", () => {
 			blocks.at(0)?.code,
 			$.dedent`
 				import mod from "file:///D:/a/b/mod.ts";
-				console.log("hello world");\n
+				console.log("hello world");
 			`,
 		);
 	}
@@ -85,7 +85,7 @@ Deno.test("mdCodeBlocks works for multiple blocks and block idx is accurate", ()
 				block?.code,
 				$.dedent`
 					import mod from "file://a/b/mod.ts";
-					console.log("hello world${idx}");\n
+					console.log("hello world${idx}");
 				`,
 			);
 		}
@@ -131,7 +131,7 @@ Deno.test("mdCodeBlocks works for tilde blocks and block idx works", () => {
 			blocks.at(0)?.code,
 			$.dedent`
 				import mod from "file://a/b/mod.ts";
-				console.log("hello world");\n
+				console.log("hello world");
 			`,
 		);
 	}
