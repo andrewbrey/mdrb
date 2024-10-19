@@ -7,8 +7,8 @@ import { daxVersion, version } from "../mod.ts";
 const root = $.relativePath(import.meta.url, "..");
 
 const latestTag = await $`git describe --tags --abbrev=0`.cwd(root).text();
-const depsDaxVersion = Deno.readTextFileSync($.path(root).join("deps.ts").toString())
-	.match(/deno.land\/x\/dax@([^\/]+)/)?.at(1) ?? "";
+const depsDaxVersion = Deno.readTextFileSync($.path(root).join("deno.jsonc").toString())
+	.match(/@david\/dax@([^"]+)/)?.at(1) ?? "";
 
 const nextIsNewer = greaterThan(parse(version), parse(latestTag));
 if (!nextIsNewer) {

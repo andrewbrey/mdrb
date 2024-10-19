@@ -33,7 +33,7 @@ function withServer(action: (serverUrl: URL) => Promise<void>) {
 			hostname: "localhost",
 			signal,
 			async onListen(details) {
-				const url = new URL(`http://${details.hostname}:${details.port}/`);
+				const url = new URL(`http://localhost:${details.port}/`);
 				try {
 					await action(url);
 					resolve();
