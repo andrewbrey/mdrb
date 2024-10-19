@@ -61,13 +61,12 @@ When provided a Markdown file (or a remote URL that points to one, or pipe the c
 ## Installation
 
 ```sh
-deno install --global --config=https://deno.land/x/mdrb/deno.jsonc -Arfn mdrb https://deno.land/x/mdrb/mod.ts
+deno install --global -Arfn mdrb jsr:@andrewbrey/mdrb
 ```
 
 > Note: if you prefer not to bake `--allow-all` permissions (with the `-A` flag) into the installed command, you can
-> specify alternate permissions, e.g.
-> `deno install --global --config=https://deno.land/x/mdrb/deno.jsonc --allow-net -rfn mdrb https://deno.land/x/mdrb/mod.ts`
-> but be aware that this means you will be prompted for permissions at runtime.
+> specify alternate permissions, e.g. `deno install --global --allow-net -rfn mdrb jsr:@andrewbrey/mdrb` but be aware
+> that this means you will be prompted for permissions at runtime.
 
 ## Demos
 

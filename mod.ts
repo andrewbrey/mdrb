@@ -3,7 +3,7 @@ import { type CodeBlock, mdCodeBlocks, renderMDToString } from "./src/markdown.t
 import { invariant, toFileURL } from "./src/util.ts";
 
 /* Current version of MDRB */
-export const version = "3.0.1";
+export const version = "3.0.2";
 
 /* Bundled version of `@david/dax` */
 export const daxVersion = "0.42.0";
