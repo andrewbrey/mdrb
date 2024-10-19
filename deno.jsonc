@@ -1,12 +1,20 @@
 {
 	"name": "@andrewbrey/mdrb",
 	"version": "3.0.2",
-	"exports": "./mod.ts",
+	"exports": "./src/cli.ts",
+	"publish": {
+		"include": [
+			"LICENSE",
+			"README.md",
+			"demo.md",
+			"src/**/*.ts"
+		]
+	},
 	"fmt": { "lineWidth": 120, "useTabs": true, "exclude": [".deno_cache", "deno.lock"] },
 	"lint": { "exclude": [".deno_cache", "deno.lock"] },
 	"tasks": {
 		"test": "deno test -A --no-check",
-		"lint": "deno check mod.ts && deno lint && deno fmt --check",
+		"lint": "deno check **/*.ts && deno lint && deno fmt --check",
 		// Bump dependencies using @molt/cli (https://jsr.io/@molt/cli) - may prompt for read perms on ~/.local/share/deno-wasmbuild
 		"deps": "deno run -E=XDG_DATA_HOME,HOME,GITHUB_TOKEN -R='./' -W=deno.jsonc -N=api.jsr.io,jsr.io,deno.land,registry.npmjs.org,esm.sh jsr:@molt/cli --write deno.jsonc",
 		"demos": "deno run -A .github/demos/generate.ts",

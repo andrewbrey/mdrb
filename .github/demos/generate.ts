@@ -1,5 +1,5 @@
-import { expandGlob, joinGlobs } from "../../deps.dev.ts";
-import { $ } from "../../deps.ts";
+import { expandGlob, joinGlobs } from "../../src/deps.dev.ts";
+import { $ } from "../../src/deps.ts";
 import { invariant } from "../../src/util.ts";
 
 const root = $.relativePath(import.meta.url, "..", "..");

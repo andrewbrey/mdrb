@@ -1,5 +1,5 @@
-import { assertEquals, assertInstanceOf, assertThrows } from "../deps.dev.ts";
-import { $, POSIX_SEP, SEP } from "../deps.ts";
+import { assertEquals, assertInstanceOf, assertThrows } from "./deps.dev.ts";
+import { $, POSIX_SEP, SEP } from "./deps.ts";
 import { invariant, toFileURL } from "./util.ts";
 
 Deno.test("invariant throws if condition false", () => {

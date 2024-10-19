@@ -1,4 +1,4 @@
-import { $, colors, type Extension, renderMarkdown } from "../deps.ts";
+import { $, colors, type Extension, renderMarkdown } from "./deps.ts";
 
 export type CodeBlock = {
 	idx: number;

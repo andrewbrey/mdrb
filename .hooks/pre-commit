@@ -1,8 +1,8 @@
 #!/usr/bin/env -S deno run -A
 
-import { equals, greaterThan, parse } from "../deps.dev.ts";
-import { $, colors } from "../deps.ts";
-import { daxVersion, version } from "../mod.ts";
+import { equals, greaterThan, parse } from "../src/deps.dev.ts";
+import { $, colors } from "../src/deps.ts";
+import { daxVersion, version } from "../src/cli.ts";
 
 const root = $.relativePath(import.meta.url, "..");
 

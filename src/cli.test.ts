@@ -1,8 +1,8 @@
 import { assertEquals, assertRejects, assertStringIncludes } from "./deps.dev.ts";
 import { $, CommandBuilder } from "./deps.ts";
 
-const mod = $.relativePath(import.meta.url, "mod.ts");
-const demo = $.relativePath(import.meta.url, "demo.md");
+const cli = $.relativePath(import.meta.url, "cli.ts");
+const demo = $.relativePath(import.meta.url, "..", "demo.md");
 const demoText = Deno.readTextFileSync(demo);
 
 const t$ = $.build$({
@@ -55,7 +55,7 @@ function withServer(action: (serverUrl: URL) => Promise<void>) {
 }
 
 Deno.test("mdrb works with local file", async () => {
-	const { combined } = await t$`deno run -A ${mod} ${demo}`.stdinText("");
+	const { combined } = await t$`deno run -A ${cli} ${demo}`.stdinText("");
 
 	const expected = $.dedent`
 		step 1 of 3 // say hello to the world
@@ -75,7 +75,7 @@ Deno.test("mdrb works with local file", async () => {
 });
 
 Deno.test("mdrb shows error output for local file if no file exists", async () => {
-	const { combined, code } = await t$`deno run -A ${mod} ./does-not-exist.md`.stdinText("");
+	const { combined, code } = await t$`deno run -A ${cli} ./does-not-exist.md`.stdinText("");
 
 	assertEquals(code, 2);
 	assertStringIncludes(combined, "no file exists at ./does-not-exist.md");
@@ -84,7 +84,7 @@ Deno.test("mdrb shows error output for local file if no file exists", async () =
 Deno.test("mdrb shows error output for local file if text read", async () => {
 	const file = await Deno.makeTempFile({ prefix: "mdrb-test_", suffix: ".md" });
 
-	const { combined, code } = await t$`deno run -A ${mod} ${file}`.stdinText("");
+	const { combined, code } = await t$`deno run -A ${cli} ${file}`.stdinText("");
 
 	assertEquals(code, 2);
 	assertStringIncludes(combined, `no code to run for ${file}`);
@@ -94,7 +94,7 @@ Deno.test("mdrb works with http", async () => {
 	await withServer(async (serverURL) => {
 		const url = new URL("/demo", serverURL);
 
-		const { combined } = await t$`deno run -A ${mod} ${url}`.stdinText("");
+		const { combined } = await t$`deno run -A ${cli} ${url}`.stdinText("");
 
 		const expected = $.dedent`
 			step 1 of 3 // say hello to the world
@@ -118,7 +118,7 @@ Deno.test("mdrb shows error output for http if no text served", async () => {
 	await withServer(async (serverURL) => {
 		const url = new URL("/does-not-exist", serverURL);
 
-		const { combined, code } = await t$`deno run -A ${mod} ${url}`.stdinText("");
+		const { combined, code } = await t$`deno run -A ${cli} ${url}`.stdinText("");
 
 		assertEquals(code, 2);
 		assertStringIncludes(combined, "no code to run for http://localhost");
@@ -126,7 +126,7 @@ Deno.test("mdrb shows error output for http if no text served", async () => {
 });
 
 Deno.test("mdrb works with stdin", async () => {
-	const { combined } = await t$`deno run -A ${mod}`.stdinText(demoText);
+	const { combined } = await t$`deno run -A ${cli}`.stdinText(demoText);
 
 	const expected = $.dedent`
 		step 1 of 3 // say hello to the world
@@ -146,7 +146,7 @@ Deno.test("mdrb works with stdin", async () => {
 });
 
 Deno.test("mdrb shows error output for stdin if no text piped", async () => {
-	const { combined, code } = await t$`deno run -A ${mod}`.stdinText("");
+	const { combined, code } = await t$`deno run -A ${cli}`.stdinText("");
 
 	assertEquals(code, 2);
 	assertStringIncludes(combined, "no code to run from stdin");
@@ -157,7 +157,7 @@ Deno.test(
 	async () => {
 		const timeout = 3_000;
 
-		await t$`deno run -A ${mod} --mode runbook`.stdinText(demoText)
+		await t$`deno run -A ${cli} --mode runbook`.stdinText(demoText)
 			.timeout(timeout).noThrow(false);
 	},
 );
@@ -169,7 +169,7 @@ Deno.test("$ is defined by default", async () => {
 		~~~
 	`;
 
-	const { combined } = await t$`deno run -A ${mod}`
+	const { combined } = await t$`deno run -A ${cli}`
 		.stdinText(md);
 
 	assertStringIncludes(combined, "$ is function");
@@ -182,7 +182,7 @@ Deno.test("$ is undefined if dax integration disabled", async () => {
 		~~~
 	`;
 
-	const { combined } = await t$`deno run -A ${mod} --dax=false`
+	const { combined } = await t$`deno run -A ${cli} --dax=false`
 		.stdinText(md);
 
 	assertStringIncludes(combined, "$ is undefined");
@@ -201,7 +201,7 @@ Deno.test("single mode throws if blocks are incompatible", async () => {
 		~~~
 	`;
 
-		await t$`deno run -A ${mod} --mode=single`.stdinText(md).noThrow(false);
+		await t$`deno run -A ${cli} --mode=single`.stdinText(md).noThrow(false);
 	});
 });
 
@@ -216,7 +216,7 @@ Deno.test("summary is printed if one is available", async () => {
 		~~~
 	`;
 
-	const { combined } = await t$`deno run -A ${mod}`
+	const { combined } = await t$`deno run -A ${cli}`
 		.stdinText(md);
 
 	assertStringIncludes(combined, `step 1 of 1 // ${summary}`);
@@ -233,7 +233,7 @@ Deno.test("summary is not printed if one is not available", async () => {
 		~~~
 	`;
 
-	const { stderr } = await t$`deno run -A ${mod}`
+	const { stderr } = await t$`deno run -A ${cli}`
 		.captureCombined(false).stdinText(md);
 
 	assertEquals(stderr.trim(), "step 1 of 1");

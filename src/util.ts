@@ -1,4 +1,4 @@
-import { $, POSIX_SEP, SEP } from "../deps.ts";
+import { $, POSIX_SEP, SEP } from "./deps.ts";
 
 /** Enforce that a condition is true, and narrow types based on the assertion */
 export function invariant(

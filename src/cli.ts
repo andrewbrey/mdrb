@@ -1,6 +1,6 @@
 import { $, colors, Command, EnumType, readAll, ValidationError } from "./deps.ts";
-import { type CodeBlock, mdCodeBlocks, renderMDToString } from "./src/markdown.ts";
-import { invariant, toFileURL } from "./src/util.ts";
+import { type CodeBlock, mdCodeBlocks, renderMDToString } from "./markdown.ts";
+import { invariant, toFileURL } from "./util.ts";
 
 /* Current version of MDRB */
 export const version = "3.0.2";

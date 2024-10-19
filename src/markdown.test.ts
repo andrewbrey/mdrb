@@ -1,5 +1,5 @@
-import { assertEquals } from "../deps.dev.ts";
-import { $ } from "../deps.ts";
+import { assertEquals } from "./deps.dev.ts";
+import { $ } from "./deps.ts";
 import { fileProtocolifyLocalImports, mdCodeBlocks, replaceImportMeta } from "./markdown.ts";
 
 const FENCE = "```";
