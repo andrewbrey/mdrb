@@ -13,8 +13,8 @@ RUN apt install curl unzip bat -y \
 
 ADD . /vhs/
 
-RUN deno install --global --config=/vhs/deno.jsonc -Arfn mdrb /vhs/mod.ts
+RUN deno install --global --config=/vhs/deno.jsonc -Arfn mdrb /vhs/src/cli.ts
 
-RUN deno cache --lock=/vhs/deno.lock /vhs/deps.ts /vhs/deps.dev.ts
+RUN deno cache --lock=/vhs/deno.lock /vhs/src/deps.ts /vhs/src/deps.dev.ts
 
 RUN mdrb /vhs/demo.md --mode isolated

@@ -71,12 +71,12 @@ _this_ file, it'll error because you can't redeclare a `const` :)
 
 ---
 
-Another cool thing about `mdrb` is that by default, the [dax](https://deno.land/x/dax) _cross platform shell scripting
+Another cool thing about `mdrb` is that by default, the [dax](https://jsr.io/@david/dax) _cross platform shell scripting
 tools_ are injected into your script...basically by adding an import to the top of it that you don't have to write
 yourself. Something like:
 
 ```
-import { $ } from 'https://deno.land/x/dax@<version>/mod.ts
+import { $ } from 'https://jsr.io/@david/dax@<version>
 ```
 
 which means your fenced code blocks have access to a _magic_ `$` variable that is the default `$` export of the `dax`

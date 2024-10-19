@@ -9,7 +9,7 @@ Set FontFamily "JetBrainsMono Nerd Font"
 
 # pre-cache runtime deps
 Hide
-Type "mdrb https://deno.land/x/mdrb/demo.md --mode isolated"
+Type "mdrb https://raw.githubusercontent.com/andrewbrey/mdrb/refs/heads/main/demo.md --mode isolated"
 Enter
 Sleep 5s
 Type "clear"
@@ -17,6 +17,6 @@ Enter
 Sleep 500ms
 Show
 
-Type "mdrb https://deno.land/x/mdrb/demo.md --mode isolated"
+Type "mdrb https://raw.githubusercontent.com/andrewbrey/mdrb/refs/heads/main/demo.md --mode isolated"
 Enter
 Sleep 5s

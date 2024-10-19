@@ -13,8 +13,8 @@
 	<a href="https://github.com/andrewbrey/mdrb/actions/workflows/ci.yml">
 		<img src="https://github.com/andrewbrey/mdrb/workflows/ci/badge.svg" alt="github actions status badge">
 	</a>
-	<a href="https://deno.land/x/mdrb">
-		<img src="https://img.shields.io/badge/deno.land/x/mdrb-success?logo=deno&logoColor=black&labelColor=white&color=black" alt="deno third-party module badge">
+	<a href="https://jsr.io/@andrewbrey/mdrb">
+		<img src="https://jsr.io/badges/@andrewbrey/mdrb">
 	</a>
 </p>
 
@@ -26,7 +26,7 @@
 - 🌀 Blend documentation with code execution; bring your `README.md` developer setup to life without losing the
   narrative format
 - ✅ Execute `TypeScript` and `JavaScript` fenced code blocks as a multi-step "runbook"
-- ✨ Automatic availability of [dsherret/dax](https://deno.land/x/dax) within code blocks to simplify cross-platform
+- ✨ Automatic availability of [@david/dax](https://jsr.io/@david/dax) within code blocks to simplify cross-platform
   shell execution
 - ⬇ Works with local and remote Markdown files and even Markdown content piped to `stdin`
 
@@ -45,7 +45,7 @@ When provided a Markdown file (or a remote URL that points to one, or pipe the c
 1. Pull out the code from each and do a bit of processing to allow it to work seamlessly with `Deno`
    - for example, references to `import.meta.url` need to be rewritten with the litteral value of the source Markdown
      file
-1. (_optionally, but by default_) add an import of the bundled version of [dax](https://deno.land/x/dax) to the code
+1. (_optionally, but by default_) add an import of the bundled version of [dax](https://jsr.io/@david/dax) to the code
    that will be executed
    - From the `dax` module the `$` object is exposed automatically to your code blocks, allowing them to transparently
      reference the functions and features (of which there are many) of `$` - most important of which is the execution of
@@ -85,7 +85,7 @@ deno install --global -Arfn mdrb jsr:@andrewbrey/mdrb
 🧪 Try it yourself with:
 
 ```sh
-mdrb https://deno.land/x/mdrb/demo.md
+mdrb https://raw.githubusercontent.com/andrewbrey/mdrb/refs/heads/main/demo.md
 ```
 
 <img src=".github/demos/usage-remote/demo.gif" alt="demonstration of using mdrb to execute the demo markdown file referenced by its URL">
