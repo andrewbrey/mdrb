@@ -1,16 +1,32 @@
 #!/usr/bin/env -S deno run -A
 
-import { greaterThan, parse } from "../deps.dev.ts";
+import { equals, greaterThan, parse } from "../deps.dev.ts";
 import { $, colors } from "../deps.ts";
 import { daxVersion, version } from "../mod.ts";
 
 const root = $.relativePath(import.meta.url, "..");
 
 const latestTag = await $`git describe --tags --abbrev=0`.cwd(root).text();
-const depsDaxVersion = Deno.readTextFileSync($.path(root).join("deno.jsonc").toString())
-	.match(/@david\/dax@([^"]+)/)?.at(1) ?? "";
+const denoJson = Deno.readTextFileSync($.path(root).join("deno.jsonc").toString());
 
-const nextIsNewer = greaterThan(parse(version), parse(latestTag));
+const configVersion = denoJson.match(/version\": \"([^"]+)\"/)?.at(1) ?? "";
+const depsDaxVersion = denoJson.match(/@david\/dax@([^"]+)/)?.at(1) ?? "";
+
+const parsedCliVersion = parse(version);
+const parsedCfgVersion = parse(configVersion);
+const parsedGitVersion = parse(latestTag);
+
+const cliAndCfgMatch = equals(parsedCliVersion, parsedCfgVersion);
+if (!cliAndCfgMatch) {
+	throw new Error($.dedent`
+		${colors.red(`mod.ts version and deno.jsonc version do not match`)}
+
+		Deno config "version" is ${colors.yellow(configVersion)} and mod.ts "version" is set to ${colors.blue(version)}
+
+	`);
+}
+
+const nextIsNewer = greaterThan(parsedCliVersion, parsedGitVersion);
 if (!nextIsNewer) {
 	throw new Error($.dedent`
 		${colors.red(`mod.ts version is out of date`)}

@@ -1,4 +1,7 @@
 {
+	"name": "@andrewbrey/mdrb",
+	"version": "3.0.1",
+	"exports": "./mod.ts",
 	"fmt": { "lineWidth": 120, "useTabs": true, "exclude": [".deno_cache", "deno.lock"] },
 	"lint": { "exclude": [".deno_cache", "deno.lock"] },
 	"tasks": {
